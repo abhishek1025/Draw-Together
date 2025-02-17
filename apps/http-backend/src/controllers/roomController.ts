@@ -21,7 +21,7 @@ export const createRoom = asyncErrorHandler(
       return;
     }
 
-    await prismaClient.room.create({
+    const room = await prismaClient.room.create({
       data: {
         slug: createRoomSchema.data.slug,
         userId: req.userId,
@@ -31,6 +31,9 @@ export const createRoom = asyncErrorHandler(
     sendSuccessResponse({
       res,
       statusCode: StatusCodes.CREATED,
+      data: {
+        roomId: room,
+      },
       message: 'New room created',
     });
   }

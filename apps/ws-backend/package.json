@@ -19,6 +19,8 @@
     "@types/ws": "^8.5.14",
     "@types/jsonwebtoken": "^9.0.8",
     "@repo/typescript-config": "workspace:*",
-    "@repo/backend-common": "workspace:*"
+    "@repo/backend-common": "workspace:*",
+    "@repo/db": "workspace:*"
   }
 }
+
