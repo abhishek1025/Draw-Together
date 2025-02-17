@@ -1,31 +1,29 @@
 import AppError from './AppError';
+import { prismaClient } from '@repo/db/prismaClient';
 
-const handleDatabaseError = (error: AppError): AppError => {
-  // Handle MongoDB errors
-  if (error.name === 'MongoError') {
-    switch (error.code) {
-      case 11000:
-        error.message =
-          'Duplicate entry detected. Please ensure unique values are used.';
-        error.statusCode = 400;
-        break;
-      case 121:
-        error.message =
-          'Document validation failed. Please check the data format.';
-        error.statusCode = 400;
-        break;
-      default:
-        error.message = 'Database error occurred. Please try again.';
-        error.statusCode = 500;
-    }
-  }
-  // Handle Mongoose validation errors
-  else if (error.name === 'ValidationError') {
-    // error.message = 'Validation error. Please check the data provided.';
-    error.statusCode = 400;
-  }
+const handlePrismaError = (error: any): AppError => {
+  switch (error.code) {
+    case 'P2002':
+      return new AppError(
+        'Duplicate entry detected. A record with the same unique value already exists.',
+        400
+      );
 
-  return error;
+    case 'P2003':
+      return new AppError(
+        'Foreign key constraint failed. Please check the referenced records.',
+        400
+      );
+
+    case 'P2025':
+      return new AppError(
+        'Record not found. The requested resource does not exist.',
+        404
+      );
+
+    default:
+      return error;
+  }
 };
 
 const handleJwtError = (error: AppError): AppError => {
@@ -54,11 +52,6 @@ export const filterError = (error: AppError): AppError => {
   error.message =
     error.message || 'Unexpected error occurred. Please try again.';
 
-  // Handle database errors (MongoDB and Mongoose)
-  if (['MongoError', 'ValidationError'].includes(error.name)) {
-    return handleDatabaseError(error);
-  }
-
   // Handle JWT errors
   if (
     ['TokenExpiredError', 'JsonWebTokenError', 'NotBeforeError'].includes(
@@ -68,6 +61,7 @@ export const filterError = (error: AppError): AppError => {
     return handleJwtError(error);
   }
 
-  return error; // Return the error if no specific handler is found
+  return handlePrismaError(error);
+  // return error;
 };
 

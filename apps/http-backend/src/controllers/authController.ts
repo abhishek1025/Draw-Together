@@ -8,16 +8,45 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/backend-common/config';
 import { CreateUserSchema, SignInSchema } from '@repo/common/types';
 import { StatusCodes } from 'http-status-codes';
+import { prismaClient } from '@repo/db/prismaClient';
+import { hashPassword } from '../utils';
+import bcrypt from 'bcrypt';
 
+// POST /auth/sign-up
 export const signUp = asyncErrorHandler(async (req: Request, res: Response) => {
-  const data = CreateUserSchema.safeParse(req.body);
+  const createUserSchema = CreateUserSchema.safeParse(req.body);
 
-  if (!data.success) {
+  if (!createUserSchema.success) {
     createError({
       message: 'Invalid data received',
+      statusCode: StatusCodes.CONFLICT,
+    });
+    return;
+  }
+
+  const isUserExist = await prismaClient.user.findFirst({
+    where: {
+      email: createUserSchema.data?.email,
+    },
+  });
+
+  if (isUserExist) {
+    createError({
+      message: 'User already exists with the same username',
       statusCode: StatusCodes.BAD_REQUEST,
     });
+    return;
   }
+
+  const hashedPassword = await hashPassword(req.body.password);
+
+  // Create a new user
+  await prismaClient.user.create({
+    data: {
+      ...createUserSchema.data,
+      password: hashedPassword,
+    },
+  });
 
   sendSuccessResponse({
     res,
@@ -26,19 +55,38 @@ export const signUp = asyncErrorHandler(async (req: Request, res: Response) => {
   });
 });
 
+// POST /auth/sign-in
 export const signIn = asyncErrorHandler(async (req: Request, res: Response) => {
-  const data = SignInSchema.safeParse(req.body);
+  const signInSchema = SignInSchema.safeParse(req.body);
 
-  if (!data.success) {
+  if (!signInSchema.success) {
     createError({
       message: 'Invalid data received',
       statusCode: StatusCodes.BAD_REQUEST,
     });
   }
 
-  const userId = 1;
+  const user = await prismaClient.user.findFirst({
+    where: {
+      email: signInSchema.data?.email,
+    },
+  });
 
-  const token = jwt.sign({ userId }, JWT_SECRET);
+  const isPasswordValid = await bcrypt.compare(
+    signInSchema.data?.password ?? '',
+    user?.password ?? ''
+  );
+
+  if (!user || !isPasswordValid) {
+    createError({
+      message: 'Username or password incorrect',
+      statusCode: StatusCodes.BAD_REQUEST,
+    });
+  }
+
+  const token = jwt.sign({ userId: user?.id }, JWT_SECRET, {
+    expiresIn: '7d',
+  });
 
   sendSuccessResponse({
     res,

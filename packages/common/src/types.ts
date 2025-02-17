@@ -1,17 +1,18 @@
 import { z } from 'zod';
 
 export const CreateUserSchema = z.object({
-  username: z.string().min(3).max(20),
-  password: z.string(),
-  name: z.string(),
+  email: z.string().email(),
+  name: z.string().min(3).max(20),
+  photo: z.string().url().optional(),
+  password: z.string().min(1, 'Password is required'),
 });
 
 export const SignInSchema = z.object({
-  username: z.string().min(3).max(20),
-  password: z.string(),
+  email: z.string().email(),
+  password: z.string().min(1, 'Password is required'),
 });
 
 export const CreateRoomSchema = z.object({
-  name: z.string().min(3).max(20),
+  slug: z.string().min(3).max(20),
 });
 

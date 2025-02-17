@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import { MyJwtPayload } from '../types';
 import { StatusCodes } from 'http-status-codes';
@@ -12,9 +12,13 @@ export const authenticateToken = (
 ) => {
   const token = req.headers['authorization'] ?? '';
 
-  const decoded = jwt.verify(token, JWT_SECRET) as MyJwtPayload;
+  const decoded: JwtPayload = jwt.verify(
+    token?.split(' ')[1] ?? '',
+    JWT_SECRET
+  ) as JwtPayload;
 
-  if (decoded) {
+  if (decoded?.userId) {
+    console.log(decoded.userId);
     req.userId = decoded.userId;
     next();
   } else {
