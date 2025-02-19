@@ -90,3 +90,22 @@ export const getRoomsByUserId = asyncErrorHandler(
   }
 );
 
+// GET /rooms/slug/:slug
+export const getRoomDetailsBySlug = asyncErrorHandler(
+  async (req: Request, res: Response) => {
+    const slug = req.params.slug;
+
+    const room = await prismaClient.room.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    sendSuccessResponse({
+      res,
+      data: room,
+      message: 'Room details by slug',
+    });
+  }
+);
+

@@ -7,11 +7,11 @@ const roomRoutes: Router = Router();
 roomRoutes
   .route('/')
   .post(authenticateToken, roomController.createRoom)
-  .get(authenticateToken, roomController.getAllRooms);
+  .get(roomController.getAllRooms);
 
-roomRoutes
-  .route('/user/:userId')
-  .get(authenticateToken, roomController.getRoomsByUserId);
+roomRoutes.route('/user/:userId').get(roomController.getRoomsByUserId);
+
+roomRoutes.route('/slug/:slug').get(roomController.getRoomDetailsBySlug);
 
 export default roomRoutes;
 

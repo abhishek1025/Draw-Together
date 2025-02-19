@@ -21,6 +21,8 @@ const validateJwtToken = (token: string): string | null => {
   return (decoded as JwtPayload).userId;
 };
 
+// TODO: Add rate restriction, Queue, and Optimize state management
+
 wss.on('connection', function connection(ws, request) {
   const url = request.url;
 
@@ -86,7 +88,5 @@ wss.on('connection', function connection(ws, request) {
       });
     }
   });
-
-  ws.send('something');
 });
 

@@ -48,3 +48,5 @@ a {
     display: unset;
   }
 }
+
+@import 'tailwindcss';

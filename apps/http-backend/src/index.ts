@@ -2,8 +2,11 @@ import express from 'express';
 import appRoutes from './routes';
 import handleError from './middleware/globalErrorHandler';
 import logger from 'morgan';
+import cors from 'cors';
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
