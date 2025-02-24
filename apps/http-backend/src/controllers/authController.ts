@@ -14,9 +14,9 @@ import bcrypt from 'bcrypt';
 
 // POST /auth/sign-up
 export const signUp = asyncErrorHandler(async (req: Request, res: Response) => {
-  const createUserSchema = CreateUserSchema.safeParse(req.body);
+  const isCreateUserDataValid = await CreateUserSchema.isValid(req.body);
 
-  if (!createUserSchema.success) {
+  if (!isCreateUserDataValid) {
     createError({
       message: 'Invalid data received',
       statusCode: StatusCodes.CONFLICT,
@@ -26,13 +26,13 @@ export const signUp = asyncErrorHandler(async (req: Request, res: Response) => {
 
   const isUserExist = await prismaClient.user.findFirst({
     where: {
-      email: createUserSchema.data?.email,
+      email: req.body?.email,
     },
   });
 
   if (isUserExist) {
     createError({
-      message: 'User already exists with the same username',
+      message: 'User already exists with this email',
       statusCode: StatusCodes.BAD_REQUEST,
     });
     return;
@@ -43,8 +43,9 @@ export const signUp = asyncErrorHandler(async (req: Request, res: Response) => {
   // Create a new user
   await prismaClient.user.create({
     data: {
-      ...createUserSchema.data,
+      email: req.body.email,
       password: hashedPassword,
+      name: req.body.email,
     },
   });
 
@@ -57,9 +58,10 @@ export const signUp = asyncErrorHandler(async (req: Request, res: Response) => {
 
 // POST /auth/sign-in
 export const signIn = asyncErrorHandler(async (req: Request, res: Response) => {
-  const signInSchema = SignInSchema.safeParse(req.body);
 
-  if (!signInSchema.success) {
+  const isSignInDataValid = await SignInSchema.isValid(req.body);
+
+  if (!isSignInDataValid) {
     createError({
       message: 'Invalid data received',
       statusCode: StatusCodes.BAD_REQUEST,
@@ -68,12 +70,12 @@ export const signIn = asyncErrorHandler(async (req: Request, res: Response) => {
 
   const user = await prismaClient.user.findFirst({
     where: {
-      email: signInSchema.data?.email,
+      email: req.body?.email,
     },
   });
 
   const isPasswordValid = await bcrypt.compare(
-    signInSchema.data?.password ?? '',
+    req.body?.password ?? '',
     user?.password ?? ''
   );
 

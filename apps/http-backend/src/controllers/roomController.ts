@@ -11,9 +11,9 @@ import { prismaClient } from '@repo/db/prismaClient';
 // POST /rooms
 export const createRoom = asyncErrorHandler(
   async (req: Request, res: Response) => {
-    const createRoomSchema = CreateRoomSchema.safeParse(req.body);
+    const isRoomDataValid = CreateRoomSchema.isValid(req.body);
 
-    if (!createRoomSchema.success) {
+    if (!isRoomDataValid) {
       createError({
         message: 'Invalid data received',
         statusCode: StatusCodes.BAD_REQUEST,
@@ -23,7 +23,7 @@ export const createRoom = asyncErrorHandler(
 
     const room = await prismaClient.room.create({
       data: {
-        slug: createRoomSchema.data.slug,
+        slug: req.body.slug,
         userId: req.userId,
       },
     });

@@ -1,7 +1,8 @@
+import { Logo } from '@/components';
 import { FeatureCard } from '@/components/FeatureCard';
 import { Github, Pencil, Shapes, Share2, Users } from 'lucide-react';
 import Image from 'next/image';
-import React from 'react';
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -9,10 +10,8 @@ export default function Home() {
       {/* Hero Section */}
       <header className='bg-gradient-to-r from-indigo-50 to-blue-50'>
         <nav className='container mx-auto px-6 py-4 flex items-center justify-between'>
-          <div className='flex items-center space-x-2'>
-            <Shapes className='w-8 h-8 text-indigo-600' />
-            <span className='text-xl font-bold text-gray-800'>DrawFlow</span>
-          </div>
+          <Logo />
+
           <div className='hidden md:flex items-center space-x-8'>
             <a href='#features' className='text-gray-600 hover:text-indigo-600'>
               Features
@@ -23,9 +22,12 @@ export default function Home() {
             <a href='#' className='text-gray-600 hover:text-indigo-600'>
               Blog
             </a>
-            <button className='bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors'>
-              Try Now
-            </button>
+
+            <Link href="/signin">
+              <button className='bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors'>
+                Try Now
+              </button>
+            </Link>
           </div>
         </nav>
 
@@ -140,4 +142,5 @@ export default function Home() {
     </div>
   );
 }
+
 
