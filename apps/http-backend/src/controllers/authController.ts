@@ -94,7 +94,7 @@ export const signIn = asyncErrorHandler(async (req: Request, res: Response) => {
     });
 
     res.cookie('token', token, {
-        httpOnly: true, // Prevents client-side JS access
+        // httpOnly: true, // Prevents client-side JS access
         secure: process.env.NODE_ENV === 'production', // HTTPS only in production
         sameSite: 'strict', // CSRF protection
         maxAge: tokenExpiryTime, // 7 days in milliseconds

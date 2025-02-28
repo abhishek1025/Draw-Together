@@ -1,9 +1,6 @@
 "use client"
 
 import {Logo} from "@/components";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
 import {useFormik} from "formik";
 import Link from "next/link";
 import {useAppDispatch} from "@/store/hooks";
@@ -11,6 +8,7 @@ import {userForgotPassword} from "@/store/features/auth/authActions";
 import {toast} from "@/utils";
 import {ForgotPasswordSchema} from "@repo/common/types";
 import {ForgotPasswordSchemaType} from "@/iterfaces";
+import {Button, Input} from "antd";
 
 export default function ForgotPassword(){
 
@@ -51,7 +49,7 @@ export default function ForgotPassword(){
 
 
                 <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="email">Email</Label>
+                    <label htmlFor="email">Email</label>
                     <Input type="text" id="email" placeholder="Email" {...formik.getFieldProps("email")}/>
 
                     {formik.errors.email && formik.touched.email && (
@@ -65,7 +63,7 @@ export default function ForgotPassword(){
             </form>
 
             <div className="my-5">
-                <Button type="submit" form="forgot-password-form" >
+                <Button htmlType="submit" type="primary" form="forgot-password-form" >
                     Forgot Password
                 </Button>
             </div>

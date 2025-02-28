@@ -1,17 +1,8 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {userForgotPassword, userResetPassword} from "@/store/features/auth/authActions";
+import {AuthReduxStateType} from "@/iterfaces";
 
-export interface AuthState {
-    forgotPasswordLoading: boolean;
-    forgotPasswordSuccess: boolean;
-    forgotPasswordError: string | undefined;
-
-    resetPasswordLoading: boolean;
-    resetPasswordSuccess: boolean;
-    resetPasswordError: string | undefined;
-}
-
-const initialState: AuthState = {
+const initialState: AuthReduxStateType = {
     resetPasswordError: undefined, resetPasswordLoading: false, resetPasswordSuccess: false,
 
     forgotPasswordError: undefined,

@@ -20,11 +20,12 @@ model User {
 }
 
 model Room {
-  id        String   @id @default(uuid())
-  slug      String   @unique
-  userId    String
-  createdAt DateTime @default(now())
-  chats     Chat[]
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  description String
+  userId      String
+  createdAt   DateTime @default(now())
+  chats       Chat[]
 
   user User @relation(fields: [userId], references: [id])
 }

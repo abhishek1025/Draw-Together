@@ -1,12 +1,10 @@
 'use client'
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {Button} from "@/components/ui/button";
-import {Logo} from "@/components";
 import { FormikValues, useFormik} from "formik";
 import {CreateUserSchema, SignInSchema} from "@repo/common/types";
 import Link from "next/link";
+import {Logo} from "@/components";
+import {Button, Input} from "antd";
 
 
 type AuthPagesProps<T> = {
@@ -40,7 +38,7 @@ export default function AuthPage<T extends FormikValues>({ isSignIn, initialValu
         <form className='space-y-6' onSubmit={formik.handleSubmit} id={"auth-form"}>
           {
             !isSignIn && (<div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="name">Name</Label>
+                <label htmlFor="name">Name</label>
                 <Input type="text" id="name" placeholder="Name" {...formik.getFieldProps("name")}/>
 
                 {formik.errors.name && formik.touched.name && (
@@ -53,7 +51,7 @@ export default function AuthPage<T extends FormikValues>({ isSignIn, initialValu
           }
 
           <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="email">Email</Label>
+            <label htmlFor="email">Email</label>
             <Input type="text" id="email" placeholder="Email" {...formik.getFieldProps("email")}/>
 
             {formik.errors.email && formik.touched.email && (
@@ -65,9 +63,9 @@ export default function AuthPage<T extends FormikValues>({ isSignIn, initialValu
           </div>
 
           <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="password">Password</Label>
+            <label htmlFor="password">Password</label>
             <div>
-              <Input type="password" id="password" placeholder="Password" {...formik.getFieldProps("password")}/>
+              <Input.Password type="password" id="password" placeholder="Password" {...formik.getFieldProps("password")}/>
               {formik.errors.password && formik.touched.password && (
                   <div
                       className="text-sm text-red-600">
@@ -84,18 +82,18 @@ export default function AuthPage<T extends FormikValues>({ isSignIn, initialValu
         </form>
 
         <div className="my-5">
-          <Button type="submit" form="auth-form">
+          <Button htmlType="submit" form="auth-form" type="primary">
           {isSignIn ? 'Sign In' : 'Sign Up'}
           </Button>
         </div>
 
         <p className='mt-6 text-center text-gray-600'>
         {isSignIn ? "Don't have an account? " : 'Already have an account? '}
-          <a
+          <Link
             href={isSignIn ? '/sign-up' : '/sign-in'}
             className='text-blue-600 hover:underline'>
             {isSignIn ? 'Sign Up' : 'Sign In'}
-          </a>
+          </Link>
         </p>
       </div>
     </div>

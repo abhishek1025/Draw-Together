@@ -1,7 +1,11 @@
+"use client"
+
 
 function getCookies (name: string): string | null  {
 
-    const cookies = window.document.cookie.split(';');
+    if (typeof window === "undefined") return null;
+
+    const cookies = window.document.cookie.split('; ');
 
     for(const cookie of cookies) {
 

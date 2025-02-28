@@ -1,6 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {clientPostRequest} from "@/utils";
-import {KnownError} from "@/iterfaces";
+import {KnownError, ResetPasswordThunkParamType} from "@/iterfaces";
 import {AxiosError} from "axios";
 
 export const userForgotPassword = createAsyncThunk<void, string, { rejectValue: KnownError }>(
@@ -15,7 +15,6 @@ export const userForgotPassword = createAsyncThunk<void, string, { rejectValue: 
             });
 
         } catch (err) {
-            console.log(err);
             const error = err as AxiosError<KnownError>
             if (!error.response) {
                 return rejectWithValue({
@@ -30,16 +29,11 @@ export const userForgotPassword = createAsyncThunk<void, string, { rejectValue: 
     },
 )
 
-export const userResetPassword = createAsyncThunk<void, {
-    confirmPassword: string;
-    password: string;
-    token: string;
-}, { rejectValue: KnownError }>(
+export const userResetPassword = createAsyncThunk<void, ResetPasswordThunkParamType, { rejectValue: KnownError }>(
     'auth/reset-password',
     async (resetPasswordData, {rejectWithValue}) => {
         try {
-
-            const res = await fetch(`${process.env?.NEXT_PUBLIC_HTTP_SERVER_URL}/auth/reset-password`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_HTTP_SERVER_URL}/auth/reset-password`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",

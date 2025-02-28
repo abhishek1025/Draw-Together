@@ -14,3 +14,4 @@ export type ApiHandlerParams = {
 
 
 export * from './auth'
+export * from './room'

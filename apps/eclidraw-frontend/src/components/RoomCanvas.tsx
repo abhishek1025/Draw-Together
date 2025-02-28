@@ -1,15 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { WS_SERVER_URL } from '../../config';
 import Canvas from './Canvas';
+import {getAuthTokenFromCookie} from "@/utils";
 
 export default function RoomCanvas({ roomId }: { roomId: string }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
     const ws = new WebSocket(
-      `${WS_SERVER_URL}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhMmYxYmI5NC01MTA2LTRlMzUtYjUwNC1mNWI2ZjFjMDdiNmUiLCJpYXQiOjE3Mzk5ODkzOTAsImV4cCI6MTc0MDU5NDE5MH0.H8GThwE8TCbAaaOwkOEbYgF7zRC6fcBO8jspv3ELUlY`
+      `${process.env.NEXT_PUBLIC_WS_SERVER_URL}?token=${getAuthTokenFromCookie()}`
     );
 
     ws.onopen = () => {

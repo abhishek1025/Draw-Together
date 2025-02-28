@@ -1,8 +1,7 @@
 'use client'
 
 import {AuthPage} from '@/components/auth';
-import {postRequest} from "@/utils";
-import {toast} from "@/utils";
+import {clientPostRequest, toast} from "@/utils";
 import {useRouter} from "next/navigation";
 
 
@@ -20,7 +19,7 @@ export default function SignIn() {
         await toast.promise("Authentication Successful, Welcome back!!!",
             async function (){
 
-               const res = await postRequest({
+               const res = await clientPostRequest({
                     endpoint: '/auth/sign-in',
                     data: values
                 })

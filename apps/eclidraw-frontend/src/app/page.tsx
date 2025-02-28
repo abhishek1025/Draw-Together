@@ -1,36 +1,12 @@
-import { Logo } from '@/components';
 import { FeatureCard } from '@/components/FeatureCard';
-import { Github, Pencil, Shapes, Share2, Users } from 'lucide-react';
+import { Github, Pencil, Share2, Users } from 'lucide-react';
 import Image from 'next/image';
-import Link from "next/link";
 
 export default function Home() {
   return (
     <div className='min-h-screen bg-white'>
       {/* Hero Section */}
       <header className='bg-gradient-to-r from-indigo-50 to-blue-50'>
-        <nav className='container mx-auto px-6 py-4 flex items-center justify-between'>
-          <Logo />
-
-          <div className='hidden md:flex items-center space-x-8'>
-            <a href='#features' className='text-gray-600 hover:text-indigo-600'>
-              Features
-            </a>
-            <a href='#' className='text-gray-600 hover:text-indigo-600'>
-              Docs
-            </a>
-            <a href='#' className='text-gray-600 hover:text-indigo-600'>
-              Blog
-            </a>
-
-            <Link href="/sign-in">
-              <button className='bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors'>
-                Try Now
-              </button>
-            </Link>
-          </div>
-        </nav>
-
         <div className='container mx-auto px-6 py-20'>
           <div className='flex flex-col md:flex-row items-center'>
             <div className='md:w-1/2 mb-10 md:mb-0'>
@@ -114,31 +90,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className='bg-gray-50 py-12'>
-        <div className='container mx-auto px-6'>
-          <div className='flex flex-col md:flex-row justify-between items-center'>
-            <div className='flex items-center space-x-2 mb-4 md:mb-0'>
-              <Shapes className='w-6 h-6 text-indigo-600' />
-              <span className='text-lg font-semibold text-gray-800'>
-                DrawFlow
-              </span>
-            </div>
-            <div className='flex space-x-6'>
-              <a href='#' className='text-gray-600 hover:text-indigo-600'>
-                Privacy
-              </a>
-              <a href='#' className='text-gray-600 hover:text-indigo-600'>
-                Terms
-              </a>
-              <a href='#' className='text-gray-600 hover:text-indigo-600'>
-                Contact
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

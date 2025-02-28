@@ -1,13 +1,11 @@
 // src/lib/api.ts
-import axios, { AxiosInstance } from 'axios';
-import {HTTP_SERVER_URL} from "@/config/config";
+import axios, {AxiosInstance} from 'axios';
 
 export default class AxiosInstanceNew {
     private axiosInstance: AxiosInstance | null = null;
 
-    constructor(baseUrl: string, token?: string) {
-
-        if (!this.axiosInstance && baseUrl) {
+    constructor(token?: string) {
+        if (!this.axiosInstance) {
             this.axiosInstance = this.createAxiosInstance(token);
         }
     }
@@ -15,7 +13,7 @@ export default class AxiosInstanceNew {
     private createAxiosInstance(token?: string): AxiosInstance {
 
         const instance = axios.create({
-            baseURL: HTTP_SERVER_URL,
+            baseURL: process.env.NEXT_PUBLIC_HTTP_SERVER_URL,
             withCredentials: true,
         });
 
@@ -53,21 +51,16 @@ export default class AxiosInstanceNew {
         data = {}
     ) => {
 
-        try {
-            const response = await this.axiosInstance?.request({
-                method,
-                url: endpoint,
-                data,
-            });
+        const response = await this.axiosInstance?.request({
+            method,
+            url: endpoint,
+            data,
+        });
 
-            if (!response) {
-                throw new Error('Unable to retrieve the response from the server.');
-            }
-
-            return { ...response.data, ok: true };
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Unknown error';
-            throw new Error(message);
+        if (!response) {
+            throw new Error('Unable to retrieve the response from the server.');
         }
+
+        return {...response.data, ok: true};
     };
 }
