@@ -18,3 +18,11 @@ export const CreateRoomSchema = yup.object({
   slug: yup.string().min(3).max(20).required("Slug is required"),
 });
 
+export const ForgotPasswordSchema = yup.object({
+  email: yup.string().email("Email must be valid").required("Email is required"),
+})
+
+export const ResetPasswordSchema = yup.object({
+  password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+  confirmPassword: yup.string().required('Confirm Password is required').oneOf([yup.ref('password')], 'Passwords do not match')
+})

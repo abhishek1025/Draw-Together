@@ -10,8 +10,11 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.13.4"
+    "@repo/typescript-config": "workspace:*"
+  },
+  "dependencies": {
+    "@types/node": "^22.13.4",
+    "dotenv": "^16.4.7"
   }
 }
 

@@ -1,6 +1,5 @@
 import { WebSocket, WebSocketServer } from 'ws';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { JWT_SECRET } from '@repo/backend-common/config';
 import { prismaClient } from '@repo/db/prismaClient';
 
 const wss = new WebSocketServer({ port: 8080 });
@@ -14,7 +13,7 @@ interface User {
 const users: User[] = [];
 
 const validateJwtToken = (token: string): string | null => {
-  const decoded = jwt.verify(token, JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET ?? '');
 
   if (typeof decoded === 'string') return null;
 

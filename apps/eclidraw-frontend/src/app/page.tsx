@@ -23,7 +23,7 @@ export default function Home() {
               Blog
             </a>
 
-            <Link href="/signin">
+            <Link href="/sign-in">
               <button className='bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors'>
                 Try Now
               </button>

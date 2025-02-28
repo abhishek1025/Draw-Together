@@ -6,6 +6,7 @@ import {Button} from "@/components/ui/button";
 import {Logo} from "@/components";
 import { FormikValues, useFormik} from "formik";
 import {CreateUserSchema, SignInSchema} from "@repo/common/types";
+import Link from "next/link";
 
 
 type AuthPagesProps<T> = {
@@ -65,13 +66,19 @@ export default function AuthPage<T extends FormikValues>({ isSignIn, initialValu
 
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="password">Password</Label>
-            <Input type="password" id="password" placeholder="Password" {...formik.getFieldProps("password")}/>
-            {formik.errors.password && formik.touched.password && (
-                <div
-                    className="text-sm text-red-600">
-                  {formik.errors.password.toString()}
-                </div>
-            )}
+            <div>
+              <Input type="password" id="password" placeholder="Password" {...formik.getFieldProps("password")}/>
+              {formik.errors.password && formik.touched.password && (
+                  <div
+                      className="text-sm text-red-600">
+                    {formik.errors.password.toString()}
+                  </div>
+              )}
+
+              <div className="text-right text-sm text-blue-600 font-bold pt-2 underline">
+                <Link href="/forgot-password">Forgot Password?</Link>
+              </div>
+            </div>
           </div>
 
         </form>
