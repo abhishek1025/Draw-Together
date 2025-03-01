@@ -1,16 +1,18 @@
-import axios from "axios";
+import {clientGetRequest} from "@/utils";
+import {ShapeType} from "@/iterfaces";
 
 export async function getExistingShapes(roomId: string) {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_SERVER_URL}/chats/room/${roomId}`);
+    const res = await clientGetRequest({
+        endpoint: `/chats/room/${roomId}`
+    })
 
-    const message = res.data.data;
+    const message = res.data;
 
     // @ts-ignore
-    const shapes = message.map(x => {
+    const shapes: ShapeType[] = message?.map(x => {
         const messageData = JSON.parse(x.message);
-
         return messageData;
     });
 
-    return shapes;
+    return shapes ?? [];
 }

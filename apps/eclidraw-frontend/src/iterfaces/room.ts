@@ -22,4 +22,4 @@ export interface RoomReduxStateType {
     roomFormError: string | undefined;
 }
 
-export interface RoomCardPropsType extends RoomType {}
+export type RoomCardPropsType = RoomType
