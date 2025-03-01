@@ -1,7 +1,6 @@
 import {getExistingShapes} from "@/draw/http";
 import {ShapeType, ToolType} from "@/iterfaces";
-import {isPointInsideRect, isPointIntersectCircle, isPointNearLine} from "@/draw/eraseUtils";
-
+import {rectShape, circleShape, pencilShape, lineShape} from './shape'
 
 export class Game {
 
@@ -14,7 +13,7 @@ export class Game {
     private startY: number = 0
     private clicked: boolean = false;
     private selectedTool: ToolType = "circle";
-    private pencilCoordinates:number[][] = [];
+    private pencilStokes:number[][] = [];
 
     constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
         this.canvas = canvas;
@@ -35,9 +34,19 @@ export class Game {
         this.socket.onmessage = event => {
             const message = JSON.parse(event.data);
 
-            if (message.type === 'chat') {
+            if (message.type === 'chat_draw') {
+
                 const parsedData = JSON.parse(message.message);
                 this.existingShapes.push(parsedData);
+
+                this.clearCanvas();
+            }
+
+            if(message.type === 'erase_draw') {
+
+                this.existingShapes = this.existingShapes.filter((s) => {
+                    return message.chatId !== s.id;
+                })
 
                 this.clearCanvas();
             }
@@ -54,27 +63,41 @@ export class Game {
         this.existingShapes.map(shape => {
             if (shape.type === 'rect') {
                 this.ctx.strokeStyle = 'rgba(255, 255, 255)';
-                this.ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
-            } else if (shape.type === 'circle') {
-                this.ctx.beginPath();
-                this.ctx.arc(shape.centerX, shape.centerY, Math.abs(shape.radius), 0, Math.PI * 2)
-                this.ctx.stroke()
-                this.ctx.closePath();
-            } else if (shape.type === 'line') {
-                this.ctx.beginPath();
-                this.ctx.moveTo(shape.x, shape.y);
-                this.ctx.lineTo(shape.endX, shape.endY);
-                this.ctx.stroke()
-            } else if (shape.type === 'pencil') {
-                this.ctx.lineCap = "round";
-                this.ctx.moveTo(shape.x, shape.y);
+                rectShape.drawRect({
+                    x: shape.x,
+                    y: shape.y,
+                    width: shape.width,
+                    height: shape.height,
+                    ctx: this.ctx,
+                });
 
-                shape.pencilCoordinates.map(([x, y]) => {
-                    this.ctx.lineTo(x, y);
+            } else if (shape.type === 'circle') {
+
+                circleShape.drawCircle({
+                    ctx: this.ctx,
+                    centerX: shape.centerX,
+                    centerY: shape.centerY,
+                    radius: shape.radius,
                 })
 
-                this.ctx.stroke();
-                this.ctx.beginPath();
+            } else if (shape.type === 'line') {
+
+                lineShape.drawLine({
+                    ctx: this.ctx,
+                    x: shape.x,
+                    y: shape.y,
+                    endX: shape.endX,
+                    endY: shape.endY,
+                })
+
+            } else if (shape.type === 'pencil') {
+                pencilShape.drawPencilStrokes({
+                    x: shape.x,
+                    y: shape.y,
+                    ctx: this.ctx,
+                    pencilStrokes: shape.pencilCoordinates,
+                    isActive: false,
+                })
             }
         });
     }
@@ -103,37 +126,47 @@ export class Game {
 
                 const radius = Math.max(width, height) / 2
 
-                const centerX = this.startX + radius;
-                const centerY = this.startY + radius;
+                circleShape.drawCircle({
+                    ctx: this.ctx,
+                    centerX: this.startX + radius,
+                    centerY: this.startY + radius,
+                    radius,
+                })
 
-                this.ctx.beginPath();
-
-                this.ctx.arc(centerX, centerY, Math.abs(radius), 0, Math.PI * 2)
-                this.ctx.stroke()
-
-                this.ctx.closePath();
 
             } else if (selectedTool === 'rect') {
                 this.clearCanvas();
 
-                this.ctx.strokeRect(this.startX, this.startY, width, height);
+                rectShape.drawRect({
+                    x: this.startX,
+                    y: this.startY,
+                    width,
+                    height,
+                    ctx: this.ctx,
+                });
+
             } else if (selectedTool === 'line') {
                 this.clearCanvas();
 
-                this.ctx.beginPath();
-                this.ctx.moveTo(this.startX, this.startY);
-                this.ctx.lineTo(e.clientX, e.clientY);
-                this.ctx.closePath();
-
-                this.ctx.stroke()
+                lineShape.drawLine({
+                    ctx: this.ctx,
+                    x: this.startX,
+                    y: this.startY,
+                    endX: e.clientX,
+                    endY: e.clientY,
+                })
 
             } else if (selectedTool === 'pencil') {
-                this.ctx.lineCap = "round";
-                this.pencilCoordinates.push([e.clientX, e.clientY])
-                this.ctx.lineTo(e.clientX, e.clientY);
-                this.ctx.stroke();
-                this.ctx.beginPath();
-                this.ctx.moveTo(e.clientX, e.clientY);
+                const pencilStoke = [e.clientX, e.clientY]
+                this.pencilStokes.push(pencilStoke)
+
+                pencilShape.drawPencilStrokes({
+                    x: e.clientX,
+                    y: e.clientY,
+                    isActive: true,
+                    ctx: this.ctx,
+                    pencilStrokes: [pencilStoke]
+                })
             }
 
         }
@@ -152,6 +185,7 @@ export class Game {
         let shape: ShapeType | null = null;
 
         const selectedTool = this.selectedTool
+
         if (selectedTool === 'rect') {
             shape = {
                 type: selectedTool,
@@ -161,6 +195,7 @@ export class Game {
                 width,
             };
         }
+
         if (selectedTool === 'circle') {
 
             const radius = Math.max(width, height) / 2;
@@ -189,24 +224,22 @@ export class Game {
                 type: selectedTool,
                 x: this.startX,
                 y: this.startY,
-                pencilCoordinates: this.pencilCoordinates,
+                pencilCoordinates: this.pencilStokes,
             }
         }
 
         if (!shape) return;
 
-        this.existingShapes.push(shape);
-
         this.socket.send(
             JSON.stringify({
-                type: 'chat',
+                type: 'chat_draw',
                 roomId: this.roomId,
                 message: JSON.stringify(shape),
             })
         );
 
         // Empty the pencil coordinates
-        this.pencilCoordinates = [];
+        this.pencilStokes = [];
     }
 
     clickHandler = (e: MouseEvent) => {
@@ -217,19 +250,41 @@ export class Game {
 
         this.existingShapes = this.existingShapes.filter((shape: ShapeType) => {
             if(shape.type === 'rect') {
-                 return !isPointInsideRect(shape.x, shape.y, shape.width, shape.height, px, py)
+
+                const erase = rectShape.eraseRect(shape.x, shape.y, shape.width, shape.height, px, py)
+
+                if(erase) {
+                    this.sendDeleteDrawShape(shape.id ?? null)
+                    return false;
+                }
+
             }
 
             if(shape.type === 'circle') {
-                return !isPointIntersectCircle(shape.centerX, shape.centerY, shape.radius, px, py)
+                const erase = circleShape.eraseCircle(shape.centerX, shape.centerY, shape.radius, px, py)
+
+                if(erase) {
+                    this.sendDeleteDrawShape(shape.id ?? null)
+                    return false;
+                }
             }
 
             if(shape.type === 'pencil') {
-                return !isPointNearLine(shape.pencilCoordinates,px,py)
+                const erase = pencilShape.eraseLineStorkes(shape.pencilCoordinates,px,py)
+
+                if(erase) {
+                    this.sendDeleteDrawShape(shape.id ?? null)
+                    return false;
+                }
             }
 
             if(shape.type === 'line') {
-                return !isPointNearLine([[shape.x, shape.y], [shape.endX, shape.endY]],px,py)
+                const erase = !pencilShape.eraseLineStorkes([[shape.x, shape.y], [shape.endX, shape.endY]],px,py)
+
+                if(erase) {
+                    this.sendDeleteDrawShape(shape.id ?? null)
+                    return false;
+                }
             }
 
             return true;
@@ -238,6 +293,18 @@ export class Game {
         this.clearCanvas();
     }
 
+    sendDeleteDrawShape(chatId:string | null) {
+
+        if(!chatId) return;
+
+        this.socket.send(
+            JSON.stringify({
+                type: 'erase_draw',
+                roomId: this.roomId,
+                chatId,
+            })
+        );
+    }
 
     initMouseHandlers() {
         this.canvas.addEventListener('mousedown', this.mouseDownHandler);

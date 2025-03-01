@@ -1,23 +1,27 @@
-export function isPointInsideRect(
-    xStart: number,
-    yStart: number,
-    width: number,
-    height: number,
-    px: number,
-    py: number
-): boolean {
-    return px >= xStart &&
-        px <= xStart + width &&
-        py >= yStart &&
-        py <= yStart + height;
+export const drawPencilStrokes = (params: {
+    ctx: CanvasRenderingContext2D;
+    x: number;
+    y: number;
+    pencilStrokes: number[][];
+    isActive: boolean;
+}) => {
+    params.ctx.lineCap = "round";
+
+    if(!params.isActive) {
+        params.ctx.moveTo(params.x, params.y);
+    }
+
+    params.pencilStrokes.map(([x, y]) => {
+        params.ctx.lineTo(x, y);
+    })
+
+    params.ctx.stroke();
+    params.ctx.beginPath();
+    params.ctx.moveTo(params.x, params.y);
 }
 
-export function isPointIntersectCircle(xStart: number, yStart: number, radius:number, px:number, py:number) {
-    return Math.sqrt((px-xStart) ** 2 + (py - yStart) ** 2) < radius;
-}
 
-
-export function isPointNearLine(lineStrokes: number[][], px: number, py: number, threshold: number = 5): boolean {
+export function eraseLineStorkes (lineStrokes: number[][], px: number, py: number, threshold: number = 5): boolean {
 
     for (let i = 0; i < lineStrokes.length - 1; i++) {
         const [x1, y1] = lineStrokes[i];
@@ -46,4 +50,3 @@ export function isPointNearLine(lineStrokes: number[][], px: number, py: number,
 
     return false;
 }
-

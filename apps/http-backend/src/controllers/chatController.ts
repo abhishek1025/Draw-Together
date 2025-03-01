@@ -1,24 +1,34 @@
-import { Request, Response } from 'express';
-import { asyncErrorHandler, sendSuccessResponse } from '../helpers';
-import { prismaClient } from '@repo/db/prismaClient';
+import {Request, Response} from 'express';
+import {asyncErrorHandler, sendSuccessResponse} from '../helpers';
+import {prismaClient, ChatTypeEnum} from '@repo/db/prismaClient';
 
 // GET /chats/room/roomId
 export const getChatsByRoomId = asyncErrorHandler(
-  async (req: Request, res: Response) => {
-    const roomId = req.params.roomId;
+    async (req: Request, res: Response) => {
 
-    const chats = await prismaClient.chat.findMany({
-      where: { roomId },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    });
+        const chatType =  (req.query.chatType as string).toUpperCase() === 'MESSAGE'
+                ? ChatTypeEnum.MESSAGE
+                : ChatTypeEnum.DRAW
 
-    sendSuccessResponse({
-      res,
-      data: chats,
-      message: 'All chats',
-    });
-  }
+
+        const roomId = req.params.roomId;
+
+        const chats = await prismaClient.chat.findMany({
+            where: {
+                roomId,
+                chatType: chatType,
+            },
+
+            orderBy: {
+                createdAt: 'asc',
+            },
+        });
+
+        sendSuccessResponse({
+            res,
+            data: chats,
+            message: 'All chats',
+        });
+    }
 );
 

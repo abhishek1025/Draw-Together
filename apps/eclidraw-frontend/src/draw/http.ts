@@ -3,7 +3,7 @@ import {ShapeType} from "@/iterfaces";
 
 export async function getExistingShapes(roomId: string) {
     const res = await clientGetRequest({
-        endpoint: `/chats/room/${roomId}`
+        endpoint: `/chats/room/${roomId}?chatType=draw`
     })
 
     const message = res.data;
@@ -11,7 +11,7 @@ export async function getExistingShapes(roomId: string) {
     // @ts-ignore
     const shapes: ShapeType[] = message?.map(x => {
         const messageData = JSON.parse(x.message);
-        return messageData;
+        return {id: x.id, ...messageData};
     });
 
     return shapes ?? [];

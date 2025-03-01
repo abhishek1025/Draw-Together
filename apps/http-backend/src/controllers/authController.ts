@@ -102,6 +102,9 @@ export const signIn = asyncErrorHandler(async (req: Request, res: Response) => {
 
     sendSuccessResponse({
         res,
+        data: {
+            token
+        },
         message: "Successfully logged in",
     });
 });
