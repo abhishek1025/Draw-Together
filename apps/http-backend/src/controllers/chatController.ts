@@ -18,11 +18,26 @@ export const getChatsByRoomId = asyncErrorHandler(
                 roomId,
                 chatType: chatType,
             },
-
+            select: {
+                id: true,
+                chatType: true,
+                message: true,
+                roomId: true,
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        photo: true,
+                    }
+                }
+            },
             orderBy: {
                 createdAt: 'asc',
             },
         });
+
+        console.log(chats);
 
         sendSuccessResponse({
             res,

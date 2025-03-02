@@ -46,7 +46,7 @@ export const signUp = asyncErrorHandler(async (req: Request, res: Response) => {
         data: {
             email: req.body.email,
             password: hashedPassword,
-            name: req.body.email,
+            name: req.body.name,
         },
     });
 

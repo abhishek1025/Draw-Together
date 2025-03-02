@@ -88,14 +88,27 @@ wss.on('connection', function connection(ws, request) {
       const roomId = parsedData.roomId;
       const message = parsedData.message;
 
-      const chat = await prismaClient.chat.create({
-        data: {
-          roomId,
-          message,
-          userId,
-          chatType: parsedData.type === 'chat_message' ? ChatTypeEnum.MESSAGE : ChatTypeEnum.DRAW,
-        },
-      });
+      const [chat, _user] = await Promise.all([
+        prismaClient.chat.create({
+          data: {
+            roomId,
+            message,
+            userId,
+            chatType: parsedData.type === 'chat_message' ? ChatTypeEnum.MESSAGE : ChatTypeEnum.DRAW,
+          },
+        }),
+        prismaClient.user.findFirst({
+          where: {
+            id:userId,
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            photo: true,
+          }
+        })
+      ])
 
       users.forEach(user => {
         if (user.rooms.includes(roomId)) {
@@ -107,6 +120,7 @@ wss.on('connection', function connection(ws, request) {
                 ...JSON.parse(message)
               }) : message,
               roomId,
+              user: JSON.stringify(_user),
             })
           );
         }

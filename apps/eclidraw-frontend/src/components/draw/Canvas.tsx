@@ -4,6 +4,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Game} from "@/draw/Game";
 import {ToolType} from "@/iterfaces";
 import TopBarCanvas from "@/components/draw/TopBarCanvas";
+import {Chat} from "@/components/chat";
 
 export default function Canvas({
                                    roomId,
@@ -26,14 +27,11 @@ export default function Canvas({
                 g.destroyMouseHandlers();
             }
         }
-
-
     }, [canvasRef]);
 
     useEffect(() => {
         game?.setTool(selectedTool);
     }, [selectedTool, game]);
-
 
     return (
         <div style={{
@@ -48,6 +46,7 @@ export default function Canvas({
 
             <TopBarCanvas selectedTool={selectedTool} setSelectedTool={setSelectedTool}/>
 
+            <Chat socket={socket} roomId={roomId} />
         </div>
     );
 }

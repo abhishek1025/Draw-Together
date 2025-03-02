@@ -220,6 +220,7 @@ export class Game {
         }
 
         if (selectedTool === 'pencil') {
+            if(this.pencilStokes.length < 20) return;
             shape = {
                 type: selectedTool,
                 x: this.startX,
