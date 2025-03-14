@@ -6,7 +6,7 @@ export function IconButton({icon, onClick, activated}: {
     activated: boolean;
 }) {
     return <div
-        className={`text-sm pointer rounded p-2 cursor-pointer ${activated ? 'bg-indigo-400' : 'text-white'}`} onClick={onClick}>
+        className={`text-sm pointer rounded px-2 py-[10px] cursor-pointer ${activated ? 'bg-indigo-400' : 'text-white'}`} onClick={onClick}>
         {icon}
     </div>
 }

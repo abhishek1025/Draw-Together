@@ -5,6 +5,7 @@ export const drawPencilStrokes = (params: {
     pencilStrokes: number[][];
     isActive: boolean;
 }) => {
+
     params.ctx.lineCap = "round";
 
     if(!params.isActive) {

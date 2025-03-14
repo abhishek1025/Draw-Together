@@ -20,7 +20,8 @@ export interface CircleType {
     type: 'circle';
     centerY: number;
     centerX: number;
-    radius: number;
+    radiusX: number;
+    radiusY: number;
 }
 
 export interface LineType {
@@ -32,6 +33,34 @@ export interface LineType {
     endY: number;
 }
 
-export type ShapeType = RectType | CircleType | LineType | PencilType ;
+export interface ArrowType {
+    id?: string;
+    type: 'arrow';
+    x: number;
+    y: number;
+    endX: number;
+    endY: number;
+}
 
-export type ToolType = 'circle' | 'rect' | 'pencil' | 'line' | 'eraser'
+export interface DiamondType {
+    id?: string;
+    type: 'diamond';
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+export interface CanvasTextType {
+    id?: string;
+    type: 'text';
+    x: number;
+    y: number;
+    text: string;
+    height: number;
+    width: number;
+}
+
+export type ShapeType = RectType | CircleType | LineType | PencilType | ArrowType | DiamondType | CanvasTextType;
+
+export type ToolType = 'circle' | 'rect' | 'pencil' | 'line' | 'eraser' | 'select' | 'diamond' | 'arrow' | 'text' | 'image'
