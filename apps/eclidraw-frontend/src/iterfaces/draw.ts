@@ -1,66 +1,81 @@
-export interface PencilType {
-    id?: string;
-    type: 'pencil';
-    x: number;
-    y: number;
-    pencilCoordinates: number[][];
+export type StrokeStyleType = "dashed" | "dotted" | "solid";
+
+interface CommonShapeTypes {
+  id?: string;
+  x: number;
+  y: number;
+  stroke: string;
+  bgColor: string;
+  strokeWidth: number;
+  strokeStyle: StrokeStyleType;
 }
 
-export interface RectType {
-    id?: string;
-    type: 'rect';
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+export interface PencilType extends CommonShapeTypes {
+  type: "pencil";
+  pencilCoordinates: number[][];
+}
+
+export interface RectType extends CommonShapeTypes {
+  type: "rect";
+  width: number;
+  height: number;
 }
 
 export interface CircleType {
-    id?: string;
-    type: 'circle';
-    centerY: number;
-    centerX: number;
-    radiusX: number;
-    radiusY: number;
+  id?: string;
+  type: "circle";
+  centerY: number;
+  centerX: number;
+  radiusX: number;
+  radiusY: number;
+  stroke: string;
+  bgColor: string;
+  strokeWidth: number;
+  strokeStyle: StrokeStyleType;
 }
 
-export interface LineType {
-    id?: string;
-    type: 'line';
-    x: number;
-    y: number;
-    endX: number;
-    endY: number;
+export interface LineType extends CommonShapeTypes {
+  type: "line";
+  endX: number;
+  endY: number;
 }
 
-export interface ArrowType {
-    id?: string;
-    type: 'arrow';
-    x: number;
-    y: number;
-    endX: number;
-    endY: number;
+export interface ArrowType extends CommonShapeTypes {
+  type: "arrow";
+  endX: number;
+  endY: number;
 }
 
-export interface DiamondType {
-    id?: string;
-    type: 'diamond';
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+export interface DiamondType extends CommonShapeTypes {
+  type: "diamond";
+  width: number;
+  height: number;
 }
 
-export interface CanvasTextType {
-    id?: string;
-    type: 'text';
-    x: number;
-    y: number;
-    text: string;
-    height: number;
-    width: number;
+export interface CanvasTextType extends CommonShapeTypes {
+  type: "text";
+  text: string;
+  height: number;
+  width: number;
 }
 
-export type ShapeType = RectType | CircleType | LineType | PencilType | ArrowType | DiamondType | CanvasTextType;
+export type ShapeType =
+  | RectType
+  | CircleType
+  | LineType
+  | PencilType
+  | ArrowType
+  | DiamondType
+  | CanvasTextType;
 
-export type ToolType = 'circle' | 'rect' | 'pencil' | 'line' | 'eraser' | 'select' | 'diamond' | 'arrow' | 'text' | 'image'
+export type ToolType =
+  | "circle"
+  | "rect"
+  | "pencil"
+  | "line"
+  | "eraser"
+  | "select"
+  | "diamond"
+  | "arrow"
+  | "text"
+  | "image";

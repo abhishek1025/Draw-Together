@@ -1,31 +1,27 @@
-"use client"
+"use client";
 
+function getCookies(name: string): string | null {
+  if (typeof window === "undefined") return null;
 
-function getCookies (name: string): string | null  {
+  const cookies = window.document.cookie.split("; ");
 
-    if (typeof window === "undefined") return null;
+  for (const cookie of cookies) {
+    if (!cookie) return null;
 
-    const cookies = window.document.cookie.split('; ');
+    const _cookie = cookie.split("=");
 
-    for(const cookie of cookies) {
+    if (_cookie[0] === name) return _cookie[1];
+  }
 
-        if(!cookie) return null;
-
-        const _cookie = cookie.split('=');
-
-        if(_cookie[0] === name) return _cookie[1];
-
-    }
-
-    return null;
+  return null;
 }
 
-export const getAuthTokenFromCookie = () => getCookies('token')
+export const getAuthTokenFromCookie = () => getCookies("token");
 
 export const setCookie = (name: string, value: string, expiresAt: Date) => {
-    document.cookie = `${name}=${value}; expires=${expiresAt.toUTCString()}`;
-}
+  document.cookie = `${name}=${value}; expires=${expiresAt.toUTCString()}`;
+};
 
 export const removeCookie = (name: string) => {
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
-}
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+};

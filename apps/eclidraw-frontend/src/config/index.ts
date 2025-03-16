@@ -1,2 +1,2 @@
-export * from "./axiosConfig"
-export * from './config'
+export * from "./axiosConfig";
+export * from "./config";

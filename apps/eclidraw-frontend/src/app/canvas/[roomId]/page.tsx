@@ -1,4 +1,4 @@
-import {RoomCanvas} from '@/components/draw';
+import { RoomCanvas } from "@/components/draw";
 
 export default async function CanvasPage({
   params,
@@ -13,4 +13,3 @@ export default async function CanvasPage({
     </div>
   );
 }
-

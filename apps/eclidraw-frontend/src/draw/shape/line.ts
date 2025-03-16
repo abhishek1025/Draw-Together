@@ -1,7 +1,24 @@
+import { ShapeType } from "@/iterfaces";
+import { setLineType } from "@/draw/shape/common";
 
-export function drawLine (params: {ctx: CanvasRenderingContext2D, x:number, y: number, endX: number, endY: number}) {
-    params.ctx.beginPath();
-    params.ctx.moveTo(params.x, params.y);
-    params.ctx.lineTo(params.endX, params.endY);
-    params.ctx.stroke()
+export function drawLine(params: {
+  ctx: CanvasRenderingContext2D;
+  shape: ShapeType;
+}) {
+  const { ctx, shape } = params;
+
+  if (shape.type !== "line") return;
+
+  ctx.strokeStyle = shape.stroke; // Border color
+  setLineType({
+    ctx,
+    strokeStyle: shape.strokeStyle,
+  });
+
+  ctx.lineWidth = shape.strokeWidth;
+
+  ctx.beginPath();
+  ctx.moveTo(shape.x, shape.y);
+  ctx.lineTo(shape.endX, shape.endY);
+  ctx.stroke();
 }

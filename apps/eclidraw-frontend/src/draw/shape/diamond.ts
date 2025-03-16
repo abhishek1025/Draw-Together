@@ -1,37 +1,53 @@
+import { ShapeType } from "@/iterfaces";
+import { setLineType } from "@/draw/shape/common";
 
+export const drawDiamondShape = (params: {
+  ctx: CanvasRenderingContext2D;
+  shape: ShapeType;
+}) => {
+  const { ctx, shape } = params;
 
-export const drawDiamondShape = (params: {ctx: CanvasRenderingContext2D, x:number, y: number, width: number, height: number})=> {
+  if (shape.type !== "diamond") return;
 
-    params.ctx.beginPath();
+  ctx.fillStyle = shape.bgColor; // Transparent fill
+  ctx.strokeStyle = shape.stroke; // Border color
+  setLineType({
+    ctx,
+    strokeStyle: shape.strokeStyle,
+  });
+  ctx.lineWidth = shape.strokeWidth;
 
-    params.ctx.moveTo(params.x, params.y - params.height / 2);
+  ctx.beginPath();
 
-    // Right Edge
-    params.ctx.lineTo(params.x + params.width / 2, params.y);
+  ctx.moveTo(shape.x, shape.y - shape.height / 2);
 
-    // bottom edge
-    params.ctx.lineTo(params.x, params.y + params.height / 2);
+  // Right Edge
+  ctx.lineTo(shape.x + shape.width / 2, shape.y);
 
-    // left edge
-    params.ctx.lineTo(params.x - params.width / 2, params.y);
+  // bottom edge
+  ctx.lineTo(shape.x, shape.y + shape.height / 2);
 
-    // closing the path automatically creates
-    params.ctx.closePath();
+  // left edge
+  ctx.lineTo(shape.x - shape.width / 2, shape.y);
 
-    params.ctx.stroke();
-}
+  // closing the path automatically creates
+  ctx.closePath();
 
-export const eraseDiamondShape  = (
-    px: number,
-    py: number,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    threshold: number = 5 // Margin for detecting near clicks
+  ctx.stroke();
+  ctx.fill();
+};
+
+export const eraseDiamondShape = (
+  px: number,
+  py: number,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  threshold: number = 5, // Margin for detecting near clicks
 ): boolean => {
-    const dx = Math.abs(px - x) / (width / 2);
-    const dy = Math.abs(py - y) / (height / 2);
+  const dx = Math.abs(px - x) / (width / 2);
+  const dy = Math.abs(py - y) / (height / 2);
 
-    return dx + dy <= 1 + threshold / Math.min(width, height);
+  return dx + dy <= 1 + threshold / Math.min(width, height);
 };

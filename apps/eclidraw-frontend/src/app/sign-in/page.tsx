@@ -1,41 +1,43 @@
-'use client'
+"use client";
 
-import {AuthPage} from '@/components/auth';
-import {clientPostRequest, toast} from "@/utils";
-import {useRouter} from "next/navigation";
-
+import { AuthPage } from "@/components/auth";
+import { clientPostRequest, toast } from "@/utils";
+import { useRouter } from "next/navigation";
 
 export default function SignIn() {
+  const router = useRouter();
 
-    const router = useRouter();
+  type SignInType = {
+    email: string;
+    password: string;
+  };
 
-    type SignInType = {
-        email: string,
-        password: string,
-    }
+  async function handleSignIn(values: SignInType) {
+    await toast.promise(
+      "Authentication Successful, Welcome back!!!",
+      async function () {
+        const res = await clientPostRequest({
+          endpoint: "/auth/sign-in",
+          data: values,
+        });
 
-    async function handleSignIn (values: SignInType) {
+        if (!res.ok) {
+          throw new Error(res.message);
+        }
 
-        await toast.promise("Authentication Successful, Welcome back!!!",
-            async function (){
+        router.push("/");
+      },
+    );
+  }
 
-               const res = await clientPostRequest({
-                    endpoint: '/auth/sign-in',
-                    data: values
-                })
-
-                if(!res.ok) {
-                    throw new Error(res.message)
-                }
-
-                router.push("/")
-            }
-        );
-    }
-
-
-    return <AuthPage<SignInType> isSignIn handleSubmitAction={handleSignIn} initialValues={{
-        email: '',
-        password: ''
-    }}></AuthPage>;
+  return (
+    <AuthPage<SignInType>
+      isSignIn
+      handleSubmitAction={handleSignIn}
+      initialValues={{
+        email: "",
+        password: "",
+      }}
+    ></AuthPage>
+  );
 }

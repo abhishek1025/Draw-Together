@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Canvas from './Canvas';
-import {getAuthTokenFromCookie} from "@/utils";
+import { useEffect, useState } from "react";
+import Canvas from "./Canvas";
+import { getAuthTokenFromCookie } from "@/utils";
 
 export default function RoomCanvas({ roomId }: { roomId: string }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
     const ws = new WebSocket(
-      `${process.env.NEXT_PUBLIC_WS_SERVER_URL}?token=${getAuthTokenFromCookie()}`
+      `${process.env.NEXT_PUBLIC_WS_SERVER_URL}?token=${getAuthTokenFromCookie()}`,
     );
 
     ws.onopen = () => {
@@ -17,9 +17,9 @@ export default function RoomCanvas({ roomId }: { roomId: string }) {
 
       ws.send(
         JSON.stringify({
-          type: 'join_room',
+          type: "join_room",
           roomId,
-        })
+        }),
       );
     };
   }, []);
@@ -32,5 +32,3 @@ export default function RoomCanvas({ roomId }: { roomId: string }) {
     </div>
   );
 }
-
-

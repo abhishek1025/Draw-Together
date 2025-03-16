@@ -1,21 +1,24 @@
+import { ShapeType } from "@/iterfaces";
 
 type paramsType = {
-    ctx: CanvasRenderingContext2D;
-    x: number;
-    y: number;
-    text: string;
-}
+  ctx: CanvasRenderingContext2D;
+  shape: ShapeType;
+};
 
 export const writeTextInCanvas = (params: paramsType) => {
+  const { ctx, shape } = params;
 
-    const textArr = params.text.split('\n')
+  if (shape.type !== "text") return;
 
-    params.ctx.font = "16px Arial";
-    params.ctx.fillStyle = "white";
-    params.ctx.textBaseline = "top";
+  const textArr = shape.text.split("\n");
 
-    for(let i = 0; i < textArr.length; i++) {
-        params.ctx.fillText(textArr[i], params.x, params.y + 20 * i);
-    }
+  ctx.lineWidth = shape.strokeWidth;
 
-}
+  ctx.font = "16px Arial";
+  ctx.fillStyle = shape.stroke;
+  ctx.textBaseline = "top";
+
+  for (let i = 0; i < textArr.length; i++) {
+    ctx.fillText(textArr[i], shape.x, shape.y + 23 * i);
+  }
+};
