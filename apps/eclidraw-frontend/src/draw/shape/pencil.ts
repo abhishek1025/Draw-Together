@@ -34,7 +34,7 @@ export const drawPencilStrokes = (params: {
   ctx.moveTo(shape.x, shape.y);
 };
 
-export function eraseLineStrokes(
+export function isNearLine(
   lineStrokes: number[][],
   px: number,
   py: number,

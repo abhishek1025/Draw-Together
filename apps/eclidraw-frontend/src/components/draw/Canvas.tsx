@@ -85,6 +85,8 @@ export default function Canvas({
 
     if (!canvas) return;
 
+    game?.resetSelectedShape();
+
     switch (selectedTool) {
       case "eraser":
         canvas.style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='10'%20height='10'%20viewBox='0%200%2040%2040'%3E%3Ccircle%20cx='20'%20cy='20'%20r='18'%20fill='none'%20stroke='white'%20stroke-width='4'/%3E%3C/svg%3E") 20 20, auto`;

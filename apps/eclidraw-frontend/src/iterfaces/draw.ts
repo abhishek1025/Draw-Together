@@ -1,13 +1,14 @@
 export type StrokeStyleType = "dashed" | "dotted" | "solid";
 
 interface CommonShapeTypes {
-  id?: string;
+  id: string | undefined;
   x: number;
   y: number;
   stroke: string;
   bgColor: string;
   strokeWidth: number;
   strokeStyle: StrokeStyleType;
+  selected: boolean;
 }
 
 export interface PencilType extends CommonShapeTypes {
@@ -21,17 +22,10 @@ export interface RectType extends CommonShapeTypes {
   height: number;
 }
 
-export interface CircleType {
-  id?: string;
+export interface CircleType extends CommonShapeTypes{
   type: "circle";
-  centerY: number;
-  centerX: number;
   radiusX: number;
   radiusY: number;
-  stroke: string;
-  bgColor: string;
-  strokeWidth: number;
-  strokeStyle: StrokeStyleType;
 }
 
 export interface LineType extends CommonShapeTypes {

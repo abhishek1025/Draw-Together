@@ -1,5 +1,5 @@
 import { ShapeType } from "@/iterfaces";
-import { setLineType } from "@/draw/shape/common";
+import { selectShape, setLineType } from "@/draw/shape/common";
 
 export function drawRect(params: {
   ctx: CanvasRenderingContext2D;
@@ -7,22 +7,32 @@ export function drawRect(params: {
 }) {
   const { ctx, shape } = params;
 
-  if (shape.type === "rect") {
-    ctx.fillStyle = shape.bgColor; // Transparent fill
-    ctx.strokeStyle = shape.stroke; // Border color
+  if (shape.type !== "rect") return;
 
-    setLineType({
+  ctx.fillStyle = shape.bgColor; // Transparent fill
+  ctx.strokeStyle = shape.stroke; // Border color
+
+  setLineType({
+    ctx,
+    strokeStyle: shape.strokeStyle,
+  });
+  ctx.lineWidth = shape.strokeWidth;
+
+  ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
+  ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
+
+  if (shape.selected) {
+    selectShape({
+      x: shape.x,
+      y: shape.y,
       ctx,
-      strokeStyle: shape.strokeStyle,
+      height: shape.height,
+      width: shape.width,
     });
-    ctx.lineWidth = shape.strokeWidth;
-
-    ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
-    ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
   }
 }
 
-export function eraseRect(
+export function isNearRect(
   xStart: number,
   yStart: number,
   width: number,

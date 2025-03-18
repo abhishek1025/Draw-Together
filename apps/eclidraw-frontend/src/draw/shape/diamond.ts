@@ -37,7 +37,7 @@ export const drawDiamondShape = (params: {
   ctx.fill();
 };
 
-export const eraseDiamondShape = (
+export const isNearDiamond = (
   px: number,
   py: number,
   x: number,

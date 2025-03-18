@@ -1,5 +1,5 @@
 import { ShapeType } from "@/iterfaces";
-import { setLineType } from "@/draw/shape/common";
+import {selectShape, setLineType} from "@/draw/shape/common";
 
 export function drawCircle(params: {
   ctx: CanvasRenderingContext2D;
@@ -20,8 +20,8 @@ export function drawCircle(params: {
   ctx.beginPath();
 
   ctx.ellipse(
-    shape.centerX,
-    shape.centerY,
+    shape.x + shape.radiusX,
+    shape.y + shape.radiusY,
     shape.radiusX,
     shape.radiusY,
     0,
@@ -31,9 +31,19 @@ export function drawCircle(params: {
   ctx.stroke();
   ctx.fill();
   ctx.closePath();
+
+  if(shape.selected){
+    selectShape({
+      x: shape.x,
+      y: shape.y,
+      ctx,
+      width: shape.radiusX * 2,
+      height: shape.radiusY * 2,
+    })
+  }
 }
 
-export function eraseCircle(
+export function isNearCircle(
   xStart: number,
   yStart: number,
   radiusX: number,
@@ -41,6 +51,10 @@ export function eraseCircle(
   px: number,
   py: number,
 ) {
+
+  xStart = xStart + radiusX;
+  yStart = yStart + radiusY;
+
   return (
     (px - xStart) ** 2 / radiusX ** 2 + (py - yStart) ** 2 / radiusY ** 2 <= 1
   );
