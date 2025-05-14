@@ -178,7 +178,6 @@ export const resetPassword = asyncErrorHandler(async (req: Request, res: Respons
 
     const isValidData = await ResetPasswordSchema.isValid(req.body);
 
-    console.log(req.body);
 
     if (!isValidData) {
         createError({

@@ -16,7 +16,6 @@ export const authenticateToken = asyncErrorHandler(
     ) as JwtPayload;
 
     if (decoded?.userId) {
-      console.log(decoded.userId);
       req.userId = decoded.userId;
       next();
     } else {
