@@ -1,5 +1,5 @@
-import { ShapeType } from "@/iterfaces";
-import { setLineType } from "@/draw/shape/common";
+import { ShapeType } from '@/interfaces';
+import { setLineType } from '@/draw/shape/common';
 
 export const drawPencilStrokes = (params: {
   ctx: CanvasRenderingContext2D;
@@ -8,11 +8,11 @@ export const drawPencilStrokes = (params: {
 }) => {
   const { ctx, shape, isActive } = params;
 
-  if (shape.type !== "pencil") return;
+  if (shape.type !== 'pencil') return;
 
   ctx.strokeStyle = shape.stroke; // Border color
 
-  ctx.lineCap = "round";
+  ctx.lineCap = 'round';
 
   setLineType({
     ctx,
@@ -38,7 +38,7 @@ export function isNearLine(
   lineStrokes: number[][],
   px: number,
   py: number,
-  threshold: number = 5,
+  threshold: number = 5
 ): boolean {
   for (let i = 0; i < lineStrokes.length - 1; i++) {
     const [x1, y1] = lineStrokes[i];
@@ -58,7 +58,7 @@ export function isNearLine(
       x1: number,
       y1: number,
       x2: number,
-      y2: number,
+      y2: number
     ): number {
       const lengthSquared = (x2 - x1) ** 2 + (y2 - y1) ** 2;
 
@@ -76,3 +76,4 @@ export function isNearLine(
 
   return false;
 }
+

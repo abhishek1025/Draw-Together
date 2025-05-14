@@ -1,1 +1,13 @@
-{"root":["./src/index.ts","./src/handlers/chat.ts","./src/handlers/connection.ts","./src/handlers/draw.ts","./src/handlers/joinroom.ts","./src/handlers/leaveroom.ts","./src/handlers/messagehandler.ts","./src/state/usermanager.ts","./src/types/index.ts","./src/utils/index.ts","./src/utils/jwt.ts"],"version":"5.7.3"}
+{
+  "root": [
+    "./src/index.ts",
+    "./src/handlers/chat.ts",
+    "./src/handlers/messagehandler.ts",
+    "./src/handlers/room.ts",
+    "./src/state/usermanager.ts",
+    "./src/types/index.ts",
+    "./src/utils/index.ts",
+    "./src/utils/jwt.ts"
+  ],
+  "version": "5.7.3"
+}

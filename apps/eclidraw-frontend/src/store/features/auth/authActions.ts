@@ -1,16 +1,16 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { clientPostRequest } from "@/utils";
-import { KnownError, ResetPasswordThunkParamType } from "@/iterfaces";
-import { AxiosError } from "axios";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { clientPostRequest } from '@/utils';
+import { KnownError, ResetPasswordThunkParamType } from '@/interfaces';
+import { AxiosError } from 'axios';
 
 export const userForgotPassword = createAsyncThunk<
   void,
   string,
   { rejectValue: KnownError }
->("auth/forgot-password", async (email, { rejectWithValue }) => {
+>('auth/forgot-password', async (email, { rejectWithValue }) => {
   try {
     return await clientPostRequest({
-      endpoint: "/auth/forgot-password",
+      endpoint: '/auth/forgot-password',
       data: {
         email,
       },
@@ -33,26 +33,26 @@ export const userResetPassword = createAsyncThunk<
   void,
   ResetPasswordThunkParamType,
   { rejectValue: KnownError }
->("auth/reset-password", async (resetPasswordData, { rejectWithValue }) => {
+>('auth/reset-password', async (resetPasswordData, { rejectWithValue }) => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_HTTP_SERVER_URL}/auth/reset-password`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${resetPasswordData.token}`,
         },
         body: JSON.stringify({
           confirmPassword: resetPasswordData.confirmPassword,
           password: resetPasswordData.password,
         }),
-      },
+      }
     );
 
     if (res.ok) return res.json();
 
-    throw new Error("Failed to reset password");
+    throw new Error('Failed to reset password');
   } catch (err) {
     const error = err as AxiosError<KnownError>;
 
@@ -63,3 +63,4 @@ export const userResetPassword = createAsyncThunk<
     });
   }
 });
+

@@ -1,5 +1,5 @@
-import { ShapeType } from "@/iterfaces";
-import { selectShape, setLineType } from "@/draw/shape/common";
+import { ShapeType } from '@/interfaces';
+import { selectShape, setLineType } from '@/draw/shape/common';
 
 export function drawRect(params: {
   ctx: CanvasRenderingContext2D;
@@ -7,7 +7,7 @@ export function drawRect(params: {
 }) {
   const { ctx, shape } = params;
 
-  if (shape.type !== "rect") return;
+  if (shape.type !== 'rect') return;
 
   ctx.fillStyle = shape.bgColor; // Transparent fill
   ctx.strokeStyle = shape.stroke; // Border color
@@ -38,7 +38,7 @@ export function isNearRect(
   width: number,
   height: number,
   px: number,
-  py: number,
+  py: number
 ): boolean {
   return (
     px >= xStart &&
@@ -47,3 +47,4 @@ export function isNearRect(
     py <= yStart + height
   );
 }
+

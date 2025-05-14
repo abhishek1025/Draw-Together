@@ -1,9 +1,9 @@
-import { clientGetRequest } from "@/utils";
-import { ShapeType } from "@/iterfaces";
+import { clientGetRequest } from '@/utils';
+import { ShapeType } from '@/interfaces';
 
 export async function getExistingShapes(
   roomId: string,
-  chatType: "draw" | "message" = "draw",
+  chatType: 'draw' | 'message' = 'draw'
 ) {
   const res = await clientGetRequest({
     endpoint: `/chats/room/${roomId}?chatType=${chatType}`,
@@ -11,9 +11,9 @@ export async function getExistingShapes(
 
   const messages = res.data;
 
-  if (chatType === "draw") {
+  if (chatType === 'draw') {
     // @ts-ignore
-    const shapes: ShapeType[] = messages?.map((x) => {
+    const shapes: ShapeType[] = messages?.map(x => {
       const messageData: ShapeType = JSON.parse(x.message);
       return { id: x.id, ...messageData };
     });
@@ -24,3 +24,4 @@ export async function getExistingShapes(
   // @ts-ignore
   return messages;
 }
+

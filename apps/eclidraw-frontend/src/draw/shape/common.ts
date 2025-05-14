@@ -1,4 +1,4 @@
-import { StrokeStyleType } from "@/iterfaces";
+import { StrokeStyleType } from '@/interfaces';
 
 export const setLineType = ({
   ctx,
@@ -7,9 +7,9 @@ export const setLineType = ({
   ctx: CanvasRenderingContext2D;
   strokeStyle: StrokeStyleType;
 }) => {
-  if (strokeStyle === "dashed") {
+  if (strokeStyle === 'dashed') {
     ctx.setLineDash([10, 5]); // Dashed line (10px dash, 5px gap)
-  } else if (strokeStyle === "dotted") {
+  } else if (strokeStyle === 'dotted') {
     ctx.setLineDash([2, 5]); // Dotted line (2px dot, 5px gap)
   } else {
     ctx.setLineDash([]); // Solid line (no dash)
@@ -37,10 +37,10 @@ export const selectShape = ({
   ctx.setLineDash([5, 4]); // Dotted line (2px dot, 5px gap)
 
   ctx.lineWidth = 2;
-  ctx.strokeStyle = "#4F45E4";
+  ctx.strokeStyle = '#4F45E4';
   ctx.strokeRect(x, y, width, height);
 
-  ctx.fillStyle = "#4F45E4";
+  ctx.fillStyle = '#4F45E4';
 
   const radius = 7;
 
@@ -97,3 +97,4 @@ const drawCircle = ({
   ctx.fill();
   ctx.closePath();
 };
+

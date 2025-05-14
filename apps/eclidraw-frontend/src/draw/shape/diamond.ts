@@ -1,5 +1,5 @@
-import { ShapeType } from "@/iterfaces";
-import { setLineType } from "@/draw/shape/common";
+import { ShapeType } from '@/interfaces';
+import { setLineType } from '@/draw/shape/common';
 
 export const drawDiamondShape = (params: {
   ctx: CanvasRenderingContext2D;
@@ -7,7 +7,7 @@ export const drawDiamondShape = (params: {
 }) => {
   const { ctx, shape } = params;
 
-  if (shape.type !== "diamond") return;
+  if (shape.type !== 'diamond') return;
 
   ctx.fillStyle = shape.bgColor; // Transparent fill
   ctx.strokeStyle = shape.stroke; // Border color
@@ -44,10 +44,11 @@ export const isNearDiamond = (
   y: number,
   width: number,
   height: number,
-  threshold: number = 5, // Margin for detecting near clicks
+  threshold: number = 5 // Margin for detecting near clicks
 ): boolean => {
   const dx = Math.abs(px - x) / (width / 2);
   const dy = Math.abs(py - y) / (height / 2);
 
   return dx + dy <= 1 + threshold / Math.min(width, height);
 };
+

@@ -1,21 +1,26 @@
 {
   "name": "@repo/common",
-  "version": "1.0.0",
-  "main": "index.js",
-  "exports": {
-    "./types": "./src/types.ts"
-  },
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsc --watch",
+    "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "exports": {
+    "./types": {
+      "types": "./src/types.ts",
+      "default": "./dist/types.js"
+    },
+    "./messageTypeConstant": {
+      "types": "./src/messageTypeConstant.ts",
+      "default": "./dist/messageTypeConstant.js"
+    }
+  },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "yup": "^1.6.1"
   }
 }
+
