@@ -1,5 +1,6 @@
 import { ShapeType } from '@/interfaces';
-import { setLineType } from '@/draw/shape/common';
+import {selectShape, setLineType} from '@/draw/shape/common';
+import {calculateBounds} from "@/draw/utils/canvasUtils";
 
 export const drawArrow = (params: {
   ctx: CanvasRenderingContext2D;
@@ -37,5 +38,19 @@ export const drawArrow = (params: {
   );
   ctx.closePath();
   ctx.stroke();
+
+  const { height, width, x, y } = calculateBounds(shape.x, shape.y, shape.endX, shape.endY);
+
+  if (shape.selected) {
+
+   selectShape({
+     ctx,
+     height,
+     width,
+     x: x-2,
+     y:y-2
+   })
+
+  }
 };
 

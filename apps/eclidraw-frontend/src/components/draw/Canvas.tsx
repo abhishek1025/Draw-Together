@@ -7,6 +7,7 @@ import TopBarCanvas from '@/components/draw/TopBarCanvas';
 import { Chat } from '@/components/chat';
 import CanvasSidebar from '@/components/draw/CanvasSidebar';
 import { useAppSelector } from '@/store/hooks';
+import {MessageType} from "@repo/common/messageTypeConstant";
 
 export default function Canvas({
   roomId,
@@ -50,14 +51,14 @@ export default function Canvas({
 
     socket.send(
       JSON.stringify({
-        type: 'chat_draw',
+        type: MessageType.CHAT_DRAW,
         roomId: roomId,
         message: JSON.stringify({
           type: 'text',
           x: left,
           y: top + 6,
-          height,
-          width,
+          height: height - 35,
+          width: width,
           text,
           stroke,
         }),

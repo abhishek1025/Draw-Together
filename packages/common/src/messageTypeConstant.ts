@@ -4,5 +4,6 @@ export const MessageType = {
   ERASE_DRAW: 'erase_draw',
   CHAT_DRAW: 'chat_draw',
   CHAT_MESSAGE: 'chat_message',
+  UPDATE_SHAPE: 'update_shape',
 };
 

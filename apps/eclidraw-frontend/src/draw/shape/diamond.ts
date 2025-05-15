@@ -1,5 +1,5 @@
 import { ShapeType } from '@/interfaces';
-import { setLineType } from '@/draw/shape/common';
+import {selectShape, setLineType} from '@/draw/shape/common';
 
 export const drawDiamondShape = (params: {
   ctx: CanvasRenderingContext2D;
@@ -35,6 +35,16 @@ export const drawDiamondShape = (params: {
 
   ctx.stroke();
   ctx.fill();
+
+  if (shape.selected) {
+    selectShape({
+      x: shape.x - shape.width / 2,
+      y: shape.y - shape.height / 2,
+      ctx,
+      height: shape.height,
+      width: shape.width,
+    });
+  }
 };
 
 export const isNearDiamond = (
