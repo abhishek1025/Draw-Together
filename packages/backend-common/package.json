@@ -8,7 +8,7 @@
   "exports": {
     "./config": {
       "types": "./src/index.ts",
-      "default": "./dist/types.js"
+      "default": "./dist/index.js"
     }
   },
   "devDependencies": {

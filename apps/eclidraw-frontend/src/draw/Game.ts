@@ -1,26 +1,21 @@
 import { getExistingShapes } from '@/draw/http';
 import { ShapeType, StrokeStyleType, ToolType } from '@/interfaces';
 import {
-  destroyMouseHandlers,
-  initMouseHandlers,
-} from './handlers/mouseHandlers';
-import { setupSocketHandlers } from './handlers/socketHandler';
-import {
-  arrowShape,
-  circleShape,
-  diamondShape,
-  lineShape,
-  pencilShape,
   rectShape,
+  circleShape,
+  pencilShape,
+  lineShape,
+  arrowShape,
+  diamondShape,
+  canvasText,
 } from './shape';
-import { calculateBounds, clearCanvasUtilFunc } from './utils/canvasUtils';
 
 export class Game {
-  public canvas: HTMLCanvasElement;
+  private canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
-  public existingShapes: ShapeType[] = [];
+  private existingShapes: ShapeType[] = [];
   private readonly roomId: string;
-  public socket: WebSocket;
+  private socket: WebSocket;
   private startX: number = 0;
   private startY: number = 0;
   private clicked: boolean = false;
@@ -40,8 +35,8 @@ export class Game {
     this.roomId = roomId;
     this.socket = socket;
     this.init();
-    setupSocketHandlers(this);
-    initMouseHandlers(this);
+    this.initHandlers();
+    this.initMouseHandlers();
   }
 
   async init() {
@@ -49,11 +44,74 @@ export class Game {
     this.clearCanvas();
   }
 
-  clearCanvas() {
-    clearCanvasUtilFunc(this.ctx, this.canvas, this.existingShapes);
+  initHandlers() {
+    this.socket.onmessage = event => {
+      const message = JSON.parse(event.data);
+
+      if (message.type === 'chat_draw') {
+        const parsedData = JSON.parse(message.message);
+        this.existingShapes.push(parsedData);
+
+        this.clearCanvas();
+      }
+
+      if (message.type === 'erase_draw') {
+        this.existingShapes = this.existingShapes.filter(s => {
+          return message.chatId !== s.id;
+        });
+
+        this.clearCanvas();
+      }
+    };
   }
 
-  mouseDownHandler(e: MouseEvent) {
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillStyle = 'rgb(0, 0, 0)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.existingShapes.map(shape => {
+      if (shape.type === 'rect') {
+        rectShape.drawRect({
+          shape,
+          ctx: this.ctx,
+        });
+      } else if (shape.type === 'circle') {
+        circleShape.drawCircle({
+          ctx: this.ctx,
+          shape,
+        });
+      } else if (shape.type === 'line') {
+        lineShape.drawLine({
+          ctx: this.ctx,
+          shape,
+        });
+      } else if (shape.type === 'pencil') {
+        pencilShape.drawPencilStrokes({
+          shape,
+          ctx: this.ctx,
+          isActive: false,
+        });
+      } else if (shape.type === 'arrow') {
+        arrowShape.drawArrow({
+          ctx: this.ctx,
+          shape,
+        });
+      } else if (shape.type === 'diamond') {
+        diamondShape.drawDiamondShape({
+          ctx: this.ctx,
+          shape,
+        });
+      } else if (shape.type === 'text') {
+        canvasText.writeTextInCanvas({
+          ctx: this.ctx,
+          shape,
+        });
+      }
+    });
+  }
+
+  mouseDownHandler = (e: MouseEvent) => {
     this.clicked = true;
     this.startX = e.clientX;
     this.startY = e.clientY;
@@ -94,15 +152,14 @@ export class Game {
         this.canvas.style.cursor = 'move';
       }
     }
-  }
+  };
 
   mouseMoveHandler = (e: MouseEvent) => {
-    const { width, height, x, y } = calculateBounds(
-      this.startX,
-      this.startY,
-      e.clientX,
-      e.clientY
-    );
+    const width = Math.abs(e.clientX - this.startX);
+    const height = Math.abs(e.clientY - this.startY);
+
+    const x = Math.min(e.clientX, this.startX),
+      y = Math.min(e.clientY, this.startY);
 
     if (this.clicked && this.existingShapes && this.selectedTool === 'select') {
       if (
@@ -255,12 +312,11 @@ export class Game {
       this.ctx.moveTo(this.startX, this.startY);
     }
 
-    const { width, height, x, y } = calculateBounds(
-      this.startX,
-      this.startY,
-      e.clientX,
-      e.clientY
-    );
+    const width = Math.abs(e.clientX - this.startX);
+    const height = Math.abs(e.clientY - this.startY);
+
+    const x = Math.min(e.clientX, this.startX),
+      y = Math.min(e.clientY, this.startY);
 
     let shape: ShapeType | null = null;
 
@@ -437,8 +493,18 @@ export class Game {
     );
   }
 
+  initMouseHandlers() {
+    this.canvas.addEventListener('mousedown', this.mouseDownHandler);
+    this.canvas.addEventListener('mouseup', this.mouseUpHandler);
+    this.canvas.addEventListener('mousemove', this.mouseMoveHandler);
+    this.canvas.addEventListener('click', this.clickHandler);
+  }
+
   destroyMouseHandlers() {
-    destroyMouseHandlers(this);
+    this.canvas.removeEventListener('mousedown', this.mouseDownHandler);
+    this.canvas.removeEventListener('mouseup', this.mouseUpHandler);
+    this.canvas.removeEventListener('mousemove', this.mouseMoveHandler);
+    this.canvas.removeEventListener('click', this.clickHandler);
   }
 
   setTool(tool: ToolType) {
