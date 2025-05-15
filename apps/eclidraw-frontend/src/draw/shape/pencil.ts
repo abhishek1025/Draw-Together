@@ -1,5 +1,5 @@
 import { ShapeType } from '@/interfaces';
-import { setLineType } from '@/draw/shape/common';
+import {selectShape, setLineType} from '@/draw/shape/common';
 
 export const drawPencilStrokes = (params: {
   ctx: CanvasRenderingContext2D;
@@ -32,7 +32,32 @@ export const drawPencilStrokes = (params: {
   ctx.stroke();
   ctx.beginPath();
   ctx.moveTo(shape.x, shape.y);
+
+  if(shape.selected) {
+    selectShape({
+      ctx,
+      ...getBoundingBoxFromStrokes(shape.pencilStrokes)
+    })
+  }
 };
+
+export function getBoundingBoxFromStrokes(strokes: number[][]) {
+  const xs = strokes.map(p => p[0]);
+  const ys = strokes.map(p => p[1]);
+
+  const minX = Math.min(...xs);
+  const minY = Math.min(...ys);
+  const maxX = Math.max(...xs);
+  const maxY = Math.max(...ys);
+
+  return {
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY,
+  };
+}
+
 
 export function isNearLine(
   lineStrokes: number[][],

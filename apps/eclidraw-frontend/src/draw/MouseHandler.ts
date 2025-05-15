@@ -26,13 +26,14 @@ export class MouseHandler {
   private offSetY = 0;
   private offSetEndX = 0;
   private offSetEndY = 0;
+  private pencilStokesOffSet: number[][];
   private pencilStrokes: number[][] = [];
 
   // Store bound handlers as properties
-  private boundMouseDownHandler: (e: MouseEvent) => void;
-  private boundMouseMoveHandler: (e: MouseEvent) => void;
-  private boundMouseUpHandler: (e: MouseEvent) => void;
-  private boundClickHandler: (e: MouseEvent) => void;
+  private readonly boundMouseDownHandler: (e: MouseEvent) => void;
+  private readonly boundMouseMoveHandler: (e: MouseEvent) => void;
+  private readonly boundMouseUpHandler: (e: MouseEvent) => void;
+  private readonly boundClickHandler: (e: MouseEvent) => void;
 
   constructor(
       canvasManager: CanvasManager,
@@ -82,38 +83,57 @@ export class MouseHandler {
     const selectedShape = this.shapeManager.getSelectedShape();
 
     if (selectedShape && this.toolManager.getTool() === 'select') {
+
+      this.canvasManager.setCursor('move');
+
       this.offSetX = this.startX - selectedShape.x;
       this.offSetY = this.startY - selectedShape.y;
 
-      this.canvasManager.setCursor('move');
+      if(selectedShape.type === 'pencil'){
+        this.pencilStokesOffSet = selectedShape.pencilStrokes.map(([x, y]) => {
+          return [this.startX - x, this.startY - y];
+        })
+      }
 
       if(selectedShape.type === 'line' || selectedShape.type === 'arrow') {
         this.offSetEndX = this.startX - selectedShape.endX;
         this.offSetEndY = this.startY - selectedShape.endY;
       }
 
+
     }
   }
 
   private mouseMoveHandler(e: MouseEvent) {
-    const { width, height, x, y } = calculateBounds(
-      this.startX,
-      this.startY,
-      e.clientX,
-      e.clientY
+    const {width, height, x, y} = calculateBounds(
+        this.startX,
+        this.startY,
+        e.clientX,
+        e.clientY
     );
 
     if (this.clicked && this.toolManager.getTool() === 'select') {
       const selectedShape = this.shapeManager.getSelectedShape();
 
-      if(!selectedShape) return;
+      if (!selectedShape) return;
 
       let updatedShape;
 
+      if(selectedShape.type === 'pencil'){
+        updatedShape = {
+          ...selectedShape,
+          x: e.clientX - this.offSetX,
+          y: e.clientY - this.offSetY,
+          pencilStrokes: this.pencilStokesOffSet.map(([offSetX, offSetY]) => {
+            return [e.clientX - offSetX, e.clientY - offSetY];
+          })
+        }
+      }
+
       if (
-        selectedShape.type === 'circle' || selectedShape.type === 'rect'  || selectedShape.type === 'text' || selectedShape.type === 'diamond'
+          selectedShape.type === 'circle' || selectedShape.type === 'rect' || selectedShape.type === 'text' || selectedShape.type === 'diamond'
       ) {
-          updatedShape = {
+        updatedShape = {
           ...selectedShape,
           x: e.clientX - this.offSetX,
           y: e.clientY - this.offSetY,
@@ -133,7 +153,7 @@ export class MouseHandler {
         };
       }
 
-      if(updatedShape) {
+      if (updatedShape) {
         this.shapeManager.setSelectedShape(updatedShape);
         this.shapeManager.updateShape(updatedShape)
         this.canvasManager.clearCanvas(this.shapeManager.getShapes());
@@ -148,64 +168,112 @@ export class MouseHandler {
 
       const selectedTool = this.toolManager.getTool();
 
-      this.canvasManager.clearCanvas(this.shapeManager.getShapes());
-
-      if (selectedTool === 'circle') {
-        const radiusX = Math.floor(width / 2);
-        const radiusY = Math.floor(height / 2);
-        circleShape.drawCircle({
-          ctx: this.canvasManager.getContext(),
-          shape: { type: selectedTool, x, y, radiusX, radiusY, ...commonProps },
-        });
-      } else if (selectedTool === 'rect') {
-        rectShape.drawRect({
-          shape: { x, y, width, height, type: selectedTool, ...commonProps },
-          ctx: this.canvasManager.getContext(),
-        });
-      } else if (selectedTool === 'line') {
-        lineShape.drawLine({
-          ctx: this.canvasManager.getContext(),
-          shape: {
-            x: this.startX,
-            y: this.startY,
-            endX: e.clientX,
-            endY: e.clientY,
-            type: selectedTool,
-            ...commonProps,
-          },
-        });
-      } else if (selectedTool === 'pencil') {
-        const pencilStroke = [e.clientX, e.clientY];
-        this.pencilStrokes.push(pencilStroke);
-        pencilShape.drawPencilStrokes({
-          shape: {
-            type: selectedTool,
-            x: e.clientX,
-            y: e.clientY,
-            pencilStrokes: [pencilStroke],
-            ...commonProps,
-          },
-          isActive: true,
-          ctx: this.canvasManager.getContext(),
-        });
-      } else if (selectedTool === 'arrow') {
-        arrowShape.drawArrow({
-          ctx: this.canvasManager.getContext(),
-          shape: {
-            type: selectedTool,
-            x: this.startX,
-            y: this.startY,
-            endX: e.clientX,
-            endY: e.clientY,
-            ...commonProps,
-          },
-        });
-      } else if (selectedTool === 'diamond') {
-        diamondShape.drawDiamondShape({
-          ctx: this.canvasManager.getContext(),
-          shape: { type: selectedTool, x, y, height, width, ...commonProps },
-        });
+      if (selectedTool !== "pencil") {
+        this.canvasManager.clearCanvas(this.shapeManager.getShapes());
       }
+
+      const ctx = this.canvasManager.getContext();
+
+      switch (selectedTool) {
+        case 'circle': {
+          const radiusX = Math.floor(width / 2);
+          const radiusY = Math.floor(height / 2);
+          circleShape.drawCircle({
+            ctx,
+            shape: {
+              type: selectedTool,
+              x,
+              y,
+              radiusX,
+              radiusY,
+              ...commonProps,
+            },
+          });
+          break;
+        }
+
+        case 'rect': {
+          rectShape.drawRect({
+            ctx,
+            shape: {
+              x,
+              y,
+              width,
+              height,
+              type: selectedTool,
+              ...commonProps,
+            },
+          });
+          break;
+        }
+
+        case 'line': {
+          lineShape.drawLine({
+            ctx,
+            shape: {
+              x: this.startX,
+              y: this.startY,
+              endX: e.clientX,
+              endY: e.clientY,
+              type: selectedTool,
+              ...commonProps,
+            },
+          });
+          break;
+        }
+
+        case 'pencil': {
+          const pencilStroke = [e.clientX, e.clientY];
+          this.pencilStrokes.push(pencilStroke);
+
+          pencilShape.drawPencilStrokes({
+            ctx,
+            shape: {
+              type: selectedTool,
+              x: e.clientX,
+              y: e.clientY,
+              pencilStrokes: [pencilStroke],
+              ...commonProps,
+            },
+            isActive: true,
+          });
+          break;
+        }
+
+        case 'arrow': {
+          arrowShape.drawArrow({
+            ctx,
+            shape: {
+              type: selectedTool,
+              x: this.startX,
+              y: this.startY,
+              endX: e.clientX,
+              endY: e.clientY,
+              ...commonProps,
+            },
+          });
+          break;
+        }
+
+        case 'diamond': {
+          diamondShape.drawDiamondShape({
+            ctx,
+            shape: {
+              type: selectedTool,
+              x,
+              y,
+              width,
+              height,
+              ...commonProps,
+            },
+          });
+          break;
+        }
+
+        default:
+          break;
+      }
+
     }
   }
 
@@ -242,17 +310,21 @@ export class MouseHandler {
 
     switch (selectedTool){
       case 'rect':
+
         shape = { type: selectedTool, x, y, height, width, ...commonProps };
         break;
 
       case 'circle':
+
         const radiusX = Math.floor(width / 2);
         const radiusY = Math.floor(height / 2);
+
         shape = { type: selectedTool, radiusX, radiusY, x, y, ...commonProps };
         break
 
       case 'line':
       case 'arrow':
+
         shape = {
           type: selectedTool,
           x: this.startX,
@@ -276,10 +348,11 @@ export class MouseHandler {
         break
 
       case 'diamond':
+
         shape = {
           type: selectedTool,
-          x: this.startX,
-          y: this.startY,
+         x,
+          y,
           height,
           width,
           ...commonProps,
@@ -289,6 +362,9 @@ export class MouseHandler {
       default:
         break;
     }
+
+    if(selectedTool !== 'pencil' && width < 10 && height < 10) return;
+
 
     if (shape) {
       this.socketHandler.sendShape(shape);
