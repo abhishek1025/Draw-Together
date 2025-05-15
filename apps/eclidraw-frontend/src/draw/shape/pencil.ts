@@ -25,7 +25,7 @@ export const drawPencilStrokes = (params: {
     ctx.moveTo(shape.x, shape.y);
   }
 
-  shape.pencilCoordinates.map(([x, y]) => {
+  shape.pencilStrokes.map(([x, y]) => {
     ctx.lineTo(x, y);
   });
 

@@ -1,20 +1,19 @@
 import { getExistingShapes } from '@/draw/http';
 import { ShapeType, StrokeStyleType, ToolType } from '@/interfaces';
 import {
-  rectShape,
-  circleShape,
-  pencilShape,
-  lineShape,
-  arrowShape,
-  diamondShape,
-  canvasText,
-} from './shape';
-import { calculateBounds, clearCanvasUtilFunc } from './utils/canvasUtils';
-import {
   destroyMouseHandlers,
   initMouseHandlers,
 } from './handlers/mouseHandlers';
 import { setupSocketHandlers } from './handlers/socketHandler';
+import {
+  arrowShape,
+  circleShape,
+  diamondShape,
+  lineShape,
+  pencilShape,
+  rectShape,
+} from './shape';
+import { calculateBounds, clearCanvasUtilFunc } from './utils/canvasUtils';
 
 export class Game {
   public canvas: HTMLCanvasElement;
@@ -196,7 +195,7 @@ export class Game {
             type: selectedTool,
             x: e.clientX,
             y: e.clientY,
-            pencilCoordinates: [pencilStoke],
+            pencilStrokes: [pencilStoke],
             ...commonProps,
           },
           isActive: true,
@@ -318,7 +317,7 @@ export class Game {
         type: selectedTool,
         x: this.startX,
         y: this.startY,
-        pencilCoordinates: this.pencilStokes,
+        pencilStrokes: this.pencilStokes,
         ...commonProps,
       };
     }
@@ -378,7 +377,7 @@ export class Game {
         }
 
         if (shape.type === 'pencil') {
-          return pencilShape.isNearLine(shape.pencilCoordinates, px, py);
+          return pencilShape.isNearLine(shape.pencilStrokes, px, py);
         }
 
         if (shape.type === 'line' || shape.type === 'arrow') {

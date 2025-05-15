@@ -1,4 +1,4 @@
-export type StrokeStyleType = "dashed" | "dotted" | "solid";
+export type StrokeStyleType = 'dashed' | 'dotted' | 'solid';
 
 interface CommonShapeTypes {
   id: string | undefined;
@@ -12,42 +12,42 @@ interface CommonShapeTypes {
 }
 
 export interface PencilType extends CommonShapeTypes {
-  type: "pencil";
-  pencilCoordinates: number[][];
+  type: 'pencil';
+  pencilStrokes: number[][];
 }
 
 export interface RectType extends CommonShapeTypes {
-  type: "rect";
+  type: 'rect';
   width: number;
   height: number;
 }
 
-export interface CircleType extends CommonShapeTypes{
-  type: "circle";
+export interface CircleType extends CommonShapeTypes {
+  type: 'circle';
   radiusX: number;
   radiusY: number;
 }
 
 export interface LineType extends CommonShapeTypes {
-  type: "line";
+  type: 'line';
   endX: number;
   endY: number;
 }
 
 export interface ArrowType extends CommonShapeTypes {
-  type: "arrow";
+  type: 'arrow';
   endX: number;
   endY: number;
 }
 
 export interface DiamondType extends CommonShapeTypes {
-  type: "diamond";
+  type: 'diamond';
   width: number;
   height: number;
 }
 
 export interface CanvasTextType extends CommonShapeTypes {
-  type: "text";
+  type: 'text';
   text: string;
   height: number;
   width: number;
@@ -63,13 +63,14 @@ export type ShapeType =
   | CanvasTextType;
 
 export type ToolType =
-  | "circle"
-  | "rect"
-  | "pencil"
-  | "line"
-  | "eraser"
-  | "select"
-  | "diamond"
-  | "arrow"
-  | "text"
-  | "image";
+  | 'circle'
+  | 'rect'
+  | 'pencil'
+  | 'line'
+  | 'eraser'
+  | 'select'
+  | 'diamond'
+  | 'arrow'
+  | 'text'
+  | 'image';
+

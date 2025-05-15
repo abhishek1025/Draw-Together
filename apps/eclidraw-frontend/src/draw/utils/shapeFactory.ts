@@ -73,12 +73,11 @@ export function createShape({
       };
 
     case 'pencil':
-      if (pencilStrokes.length < 20) return null;
       return {
         type: 'pencil',
         x: startX,
         y: startY,
-        pencilCoordinates: pencilStrokes,
+        pencilStrokes: pencilStrokes,
         ...common,
       };
 
