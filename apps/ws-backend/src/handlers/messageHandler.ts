@@ -1,10 +1,12 @@
 import { WebSocket } from 'ws';
 import { joinRoom, leaveRoom } from './room';
-import { deleteChat, sendChatMessage } from './chat';
+import {deleteChat, sendChatMessage, updateDraw} from './chat';
 import { MessageType } from '@repo/common/messageTypeConstant';
 
 export function messageRouter(ws: WebSocket, userId: string, raw: any) {
   const parsedData = JSON.parse(raw);
+
+  console.log(parsedData)
 
   switch (parsedData.type) {
     case MessageType.JOIN_ROOM:
@@ -25,6 +27,10 @@ export function messageRouter(ws: WebSocket, userId: string, raw: any) {
 
     case MessageType.CHAT_MESSAGE:
       sendChatMessage(parsedData, userId);
+      break;
+
+    case MessageType.UPDATE_SHAPE:
+      updateDraw(parsedData)
       break;
 
     default:

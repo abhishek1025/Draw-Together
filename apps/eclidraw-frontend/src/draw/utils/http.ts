@@ -15,6 +15,7 @@ export async function getExistingShapes(
     // @ts-ignore
     const shapes: ShapeType[] = messages?.map(x => {
       const messageData: ShapeType = JSON.parse(x.message);
+      // @ts-ignore
       return { id: x.id, ...messageData };
     });
 

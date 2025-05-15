@@ -70,3 +70,21 @@ export async function sendChatMessage(data: any, userId: string) {
   });
 }
 
+export async function updateDraw(data: any) {
+    const roomId = data.roomId;
+    const message = JSON.parse(data.message);
+
+    await prismaClient.chat.update({
+        where:{
+            id: message.id,
+        },
+        data: {
+            message: data.message,
+        }
+    })
+
+    userManager.getUsersInRoom(roomId).forEach(user => {
+        user.ws.send(JSON.stringify(data))
+    })
+}
+

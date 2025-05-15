@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc -b",
     "start": "node --env-file=.env dist/index.js",
-    "dev": "tsc --watch"
+    "dev": "pnpm run build && pnpm run start"
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.2",
