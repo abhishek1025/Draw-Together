@@ -65,7 +65,4 @@ export class CanvasManager {
     return this.ctx;
   }
 
-  getCanvas() {
-    return this.canvas;
-  }
 }

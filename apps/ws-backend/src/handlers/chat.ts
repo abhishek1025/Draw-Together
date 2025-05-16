@@ -1,5 +1,6 @@
 import { ChatTypeEnum, prismaClient } from '@repo/db/prismaClient';
 import { userManager } from '../state/userManager';
+import {MessageType} from "@repo/common/messageTypeConstant";
 
 export async function deleteChat(data: any) {
   const chatId = data.chatId;
@@ -86,5 +87,23 @@ export async function updateDraw(data: any) {
     userManager.getUsersInRoom(roomId).forEach(user => {
         user.ws.send(JSON.stringify(data))
     })
+}
+
+export async function deleteAllDraws(data:any) {
+    const roomId = data.roomId;
+
+    await prismaClient.chat.deleteMany({
+        where: {
+            roomId: roomId,
+            chatType: ChatTypeEnum.DRAW,
+        }
+    })
+
+    userManager.getUsersInRoom(roomId).forEach(user => {
+        user.ws.send(JSON.stringify({
+            type: MessageType.DELETE_DRAWS
+        }))
+    })
+
 }
 

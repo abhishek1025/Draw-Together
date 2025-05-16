@@ -39,16 +39,17 @@ export class SocketHandler {
           break;
 
         case MessageType.UPDATE_SHAPE:
-
           const updatedShape: ShapeType = JSON.parse(data.message);
-
           this.shapeManager.updateShape({
             ...updatedShape,
             selected: updatedShape.id === this.shapeManager.getSelectedShape()?.id
           });
-
           this.canvasManager.clearCanvas(this.shapeManager.getShapes());
+          break;
 
+        case MessageType.DELETE_DRAWS:
+          this.shapeManager.clearShapes();
+          this.canvasManager.clearCanvas(this.shapeManager.getShapes());
           break;
 
         default:
@@ -86,5 +87,6 @@ export class SocketHandler {
       message: JSON.stringify(shape),
     }));
   }
+
 
 }

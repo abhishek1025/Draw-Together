@@ -1,20 +1,12 @@
 import { Avatar, Button, Input } from 'antd';
 import { ArrowUp, MessageSquareText, X } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {FormEvent, useEffect, useRef, useState} from 'react';
 import { getExistingShapes } from '@/draw/utils/http';
 import { toast } from 'sonner';
+import {MessageType} from "@repo/common/messageTypeConstant";
+import {ChatMessage} from "@/interfaces/chat";
 
 const Chat = ({ socket, roomId }: { socket: WebSocket; roomId: string }) => {
-  type ChatMessage = {
-    id: string;
-    message: string;
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      photo: string;
-    };
-  };
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -30,7 +22,6 @@ const Chat = ({ socket, roomId }: { socket: WebSocket; roomId: string }) => {
   useEffect(() => {
     const fetchChatMessages = async () => {
       const messages = await getExistingShapes(roomId, 'message');
-      // @ts-ignore
       setMessages(messages);
     };
     fetchChatMessages();
@@ -45,7 +36,7 @@ const Chat = ({ socket, roomId }: { socket: WebSocket; roomId: string }) => {
 
   const handleSendMessage = (event: MessageEvent) => {
     const message = JSON.parse(event.data);
-    if (message.type === 'chat_message') {
+    if (message.type === MessageType.CHAT_MESSAGE) {
       const newMessage: ChatMessage = {
         ...message,
         user: JSON.parse(message.user),
@@ -80,10 +71,12 @@ const Chat = ({ socket, roomId }: { socket: WebSocket; roomId: string }) => {
     setDisplayChat(false);
   };
 
-  const sendMessage = () => {
+  const sendMessage = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     socket.send(
         JSON.stringify({
-          type: 'chat_message',
+          type: MessageType.CHAT_MESSAGE,
           roomId,
           message: newMessage,
         })
@@ -140,23 +133,23 @@ const Chat = ({ socket, roomId }: { socket: WebSocket; roomId: string }) => {
                   </div>
                 </div>
 
-                <div className='flex gap-x-5 items-center bg-white p-4 rounded'>
+                <form id="chat-msg-form" className='flex gap-x-5 items-center bg-white p-4 rounded' onSubmit={sendMessage}>
                   <Input
                       placeholder='Please enter your chat'
                       value={newMessage}
                       onChange={e => {
                         setNewMessage(e.target.value);
                       }}
+                      required
                   />
                   <Button
                       icon={<ArrowUp />}
                       type='primary'
                       size='middle'
                       shape='circle'
-                      onClick={sendMessage}
-                      disabled={!newMessage}
+                      htmlType='submit'
                   />
-                </div>
+                </form>
               </div>
             </div>
         )}

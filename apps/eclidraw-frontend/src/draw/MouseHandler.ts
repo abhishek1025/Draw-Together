@@ -26,7 +26,7 @@ export class MouseHandler {
   private offSetY = 0;
   private offSetEndX = 0;
   private offSetEndY = 0;
-  private pencilStokesOffSet: number[][];
+  private pencilStokesOffSet: number[][] = [];
   private pencilStrokes: number[][] = [];
 
   // Store bound handlers as properties

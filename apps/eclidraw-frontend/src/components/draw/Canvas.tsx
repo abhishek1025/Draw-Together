@@ -57,7 +57,7 @@ export default function Canvas({
           type: 'text',
           x: left,
           y: top + 6,
-          height: height - 35,
+          height: height - 10,
           width: width,
           text,
           stroke,
@@ -67,6 +67,13 @@ export default function Canvas({
 
     setText('');
   };
+
+  const clearCanvas = () => {
+    socket.send(JSON.stringify({
+      type: MessageType.DELETE_DRAWS,
+      roomId: roomId,
+    }))
+  }
 
   useEffect(() => {
     if (canvasRef.current && inputBoxRef.current) {
@@ -143,10 +150,12 @@ export default function Canvas({
   }, [text]);
 
   useEffect(() => {
-    game?.setStroke(stroke);
-    game?.setBgColor(bgColor);
-    game?.setStrokeStyle(strokeStyle);
-    game?.setStrokeWidth(strokeWidth);
+   game?.setStyle({
+     stroke,
+     bgColor,
+     strokeStyle,
+     strokeWidth
+   })
   }, [stroke, bgColor, strokeWidth, strokeStyle, game]);
 
   return (
@@ -164,6 +173,7 @@ export default function Canvas({
       <TopBarCanvas
         selectedTool={selectedTool}
         setSelectedTool={setSelectedTool}
+        clearCanvas={clearCanvas}
       />
 
       <textarea

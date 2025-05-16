@@ -72,5 +72,6 @@ export type ToolType =
   | 'diamond'
   | 'arrow'
   | 'text'
-  | 'image';
+  | 'image'
+  | 'delete' ;
 

@@ -24,6 +24,10 @@ export class ShapeManager {
     return this.shapes;
   }
 
+  clearShapes() {
+    this.shapes = [];
+  }
+
   addShape(shape: ShapeType) {
     this.shapes.push(shape);
   }

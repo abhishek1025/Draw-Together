@@ -1,23 +1,44 @@
 import { ToolType } from '@/interfaces';
 import { IconButton } from '@/components/draw/IconButton';
 import {
-  ArrowRightIcon,
-  Circle,
-  DiamondIcon,
-  Eraser,
-  Minus,
-  MousePointer,
-  Pencil,
-  Square,
-  TypeIcon,
+    ArrowRightIcon,
+    Circle,
+    DiamondIcon,
+    Eraser,
+    Minus,
+    MousePointer,
+    Pencil,
+    Square, Trash2,
+    TypeIcon,
 } from 'lucide-react';
-import React from 'react';
+import React, {useState} from 'react';
+import {Modal} from "antd";
+import {toast} from "sonner";
 
 export default function TopBarCanvas(params: {
   selectedTool: ToolType;
   setSelectedTool: (s: ToolType) => void;
+  clearCanvas: () => void;
 }) {
-  const { selectedTool, setSelectedTool } = params;
+  const { selectedTool, setSelectedTool, clearCanvas } = params;
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleClearCanvas = () => {
+        clearCanvas();
+        toast.success('Canvas cleared successfully!!');
+        setSelectedTool("select");
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
 
   return (
     <div className='fixed top-[5%] left-[50%] -translate-x-[50%] -translate-y-[50%]'>
@@ -94,6 +115,27 @@ export default function TopBarCanvas(params: {
           }}
           activated={selectedTool === 'eraser'}
         />
+
+          <IconButton
+              icon={<Trash2  height='15px' />}
+              onClick={showModal}
+              activated={selectedTool === 'delete'}
+          />
+
+          <Modal
+              title="Clear Canvas?"
+              open={isModalOpen}
+              onOk={handleClearCanvas}
+              onCancel={handleCancel}
+              okText="Yes, Clear"
+              cancelText="No, Cancel"
+              closable
+          >
+              <p>Are you sure you want to clear the entire canvas?</p>
+              <p>This action cannot be undone.</p>
+          </Modal>
+
+
       </div>
     </div>
   );

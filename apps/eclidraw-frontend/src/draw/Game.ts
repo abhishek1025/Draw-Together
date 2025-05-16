@@ -37,24 +37,37 @@ export class Game {
   }
 
   setTool(tool: ToolType) {
-    this.toolManager.setTool(tool);
+    this.toolManager.setTool(tool)
   }
 
-  setStroke(stroke: string) {
+  setStyle(options: {
+    stroke: string;
+    bgColor: string;
+    strokeWidth: number;
+    strokeStyle: StrokeStyleType;
+  }) {
+    const { stroke, bgColor, strokeWidth, strokeStyle } = options;
+
     this.toolManager.setStroke(stroke);
-  }
-
-  setBgColor(bgColor: string) {
     this.toolManager.setBgColor(bgColor);
-  }
-
-  setStrokeWidth(strokeWidth: number) {
     this.toolManager.setStrokeWidth(strokeWidth);
+    this.toolManager.setStrokeStyle(strokeStyle);
+
+    let selectedShape = this.shapeManager.getSelectedShape();
+
+    if(selectedShape){
+
+      selectedShape = {...selectedShape, ...options}
+
+      this.shapeManager.setSelectedShape(selectedShape)
+      this.shapeManager.updateShape(selectedShape);
+      this.canvasManager.clearCanvas(this.shapeManager.getShapes());
+      this.socketHandler.sendUpdateShape(selectedShape)
+    }
   }
 
-  setStrokeStyle(strokeStyle: StrokeStyleType) {
-    this.toolManager.setStrokeStyle(strokeStyle);
-  }
+
+
 
   resetSelectedShape() {
     this.shapeManager.resetSelectedShape();

@@ -1,6 +1,6 @@
 import { WebSocket } from 'ws';
 import { joinRoom, leaveRoom } from './room';
-import {deleteChat, sendChatMessage, updateDraw} from './chat';
+import {deleteAllDraws, deleteChat, sendChatMessage, updateDraw} from './chat';
 import { MessageType } from '@repo/common/messageTypeConstant';
 
 export function messageRouter(ws: WebSocket, userId: string, raw: any) {
@@ -31,6 +31,10 @@ export function messageRouter(ws: WebSocket, userId: string, raw: any) {
 
     case MessageType.UPDATE_SHAPE:
       updateDraw(parsedData)
+      break;
+
+    case MessageType.DELETE_DRAWS:
+      deleteAllDraws(parsedData);
       break;
 
     default:
