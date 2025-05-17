@@ -16,8 +16,6 @@ wss.on('connection', function connection(ws, request) {
 
   const userId = validateJwtToken(queryParams.get('token') ?? '');
 
-  console.log(userId)
-
   if (!userId) {
     ws.close();
     return;

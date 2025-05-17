@@ -2,10 +2,13 @@ import { ShapeType } from '@/interfaces';
 import { CanvasManager } from './CanvasManager';
 import { ShapeManager } from './ShapeManager';
 import {MessageType} from "@repo/common/messageTypeConstant";
+import {ActiveUser} from "@/interfaces/chat";
+
+
 
 export class SocketHandler {
   private socket: WebSocket;
-  private roomId: string;
+  private readonly roomId: string;
   private canvasManager: CanvasManager;
   private shapeManager: ShapeManager;
 

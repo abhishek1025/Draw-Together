@@ -5,6 +5,7 @@ import { getExistingShapes } from '@/draw/utils/http';
 import { toast } from 'sonner';
 import {MessageType} from "@repo/common/messageTypeConstant";
 import {ChatMessage} from "@/interfaces/chat";
+import UserAvatar from "@/components/User/UserAvatar";
 
 const Chat = ({ socket, roomId }: { socket: WebSocket; roomId: string }) => {
 
@@ -90,9 +91,7 @@ const Chat = ({ socket, roomId }: { socket: WebSocket; roomId: string }) => {
         (index > 0 && messages[index - 1]?.user.id !== message.user.id)
     ) {
       return (
-          <Avatar size={30} src={message.user.photo} className='!bg-indigo-600'>
-            {!message.user.photo && message.user.name.charAt(0).toUpperCase()}
-          </Avatar>
+         <UserAvatar user={{name: message.user.name, photo: message.user.photo}} />
       );
     }
   };

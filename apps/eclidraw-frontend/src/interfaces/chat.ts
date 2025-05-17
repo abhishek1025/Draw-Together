@@ -8,3 +8,9 @@ export type ChatMessage = {
         photo: string;
     };
 };
+
+export type ActiveUser = {
+    id: string;
+    name: string;
+    photo: string;
+}

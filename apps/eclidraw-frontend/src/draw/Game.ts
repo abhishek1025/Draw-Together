@@ -5,12 +5,15 @@ import { ShapeManager } from './ShapeManager';
 import { SocketHandler } from './SocketHandler';
 import { ToolManager } from './ToolManager';
 
+
+
 export class Game {
   private readonly canvasManager: CanvasManager;
   private readonly shapeManager: ShapeManager;
   private readonly toolManager: ToolManager;
   private mouseHandler: MouseHandler;
   private readonly socketHandler: SocketHandler;
+
 
   constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
     this.canvasManager = new CanvasManager(canvas);
@@ -67,8 +70,6 @@ export class Game {
   }
 
 
-
-
   resetSelectedShape() {
     this.shapeManager.resetSelectedShape();
     this.canvasManager.clearCanvas(this.shapeManager.getShapes());
@@ -77,4 +78,7 @@ export class Game {
   destroyMouseHandlers() {
     this.mouseHandler.destroy();
   }
+
+
+
 }

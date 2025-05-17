@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Game } from '@/draw/Game';
 import { ToolType } from '@/interfaces';
 import TopBarCanvas from '@/components/draw/TopBarCanvas';
-import { Chat } from '@/components/chat';
+import { Chat, ActiveUsersList} from '@/components/chat';
 import CanvasSidebar from '@/components/draw/CanvasSidebar';
 import { useAppSelector } from '@/store/hooks';
 import {MessageType} from "@repo/common/messageTypeConstant";
@@ -188,6 +188,8 @@ export default function Canvas({
         }}
         wrap='off'
       />
+
+      <ActiveUsersList ws={socket} roomId={roomId} />
 
       <CanvasSidebar />
 

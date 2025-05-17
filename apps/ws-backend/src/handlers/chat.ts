@@ -1,5 +1,6 @@
 import { ChatTypeEnum, prismaClient } from '@repo/db/prismaClient';
 import { userManager } from '../state/userManager';
+// @ts-ignore
 import {MessageType} from "@repo/common/messageTypeConstant";
 
 export async function deleteChat(data: any) {
