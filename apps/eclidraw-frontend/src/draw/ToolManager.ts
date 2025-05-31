@@ -1,11 +1,11 @@
-import { ToolType, StrokeStyleType } from '@/interfaces';
+import { ToolType, StrokeStyleType } from "@/interfaces";
 
 export class ToolManager {
-  private selectedTool: ToolType = 'select';
-  private stroke: string = '#ffffff';
-  private bgColor: string = 'transparent';
+  private selectedTool: ToolType = "select";
+  private stroke: string = "#ffffff";
+  private bgColor: string = "transparent";
   private strokeWidth: number = 1;
-  private strokeStyle: StrokeStyleType = 'solid';
+  private strokeStyle: StrokeStyleType = "solid";
 
   setTool(tool: ToolType) {
     this.selectedTool = tool;

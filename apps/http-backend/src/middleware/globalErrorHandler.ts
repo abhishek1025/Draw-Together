@@ -1,5 +1,5 @@
-import { ErrorRequestHandler, NextFunction, Response } from 'express';
-import { AppError, filterError } from '../helpers';
+import { ErrorRequestHandler, NextFunction, Response } from "express";
+import { AppError, filterError } from "../helpers";
 
 const handleError: ErrorRequestHandler = (error, req, res, next) => {
   // Filter and modify the error
@@ -15,4 +15,3 @@ const handleError: ErrorRequestHandler = (error, req, res, next) => {
 };
 
 export default handleError;
-

@@ -1,10 +1,8 @@
-
-
 export const calculateBounds = (
   startX: number,
   startY: number,
   endX: number,
-  endY: number
+  endY: number,
 ) => {
   const width = Math.abs(endX - startX);
   const height = Math.abs(endY - startY);
@@ -17,13 +15,9 @@ export const calculateBounds = (
 export const fillBackground = (
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
-  color = 'rgb(0, 0, 0)'
+  color = "rgb(0, 0, 0)",
 ) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
-
-
-
-

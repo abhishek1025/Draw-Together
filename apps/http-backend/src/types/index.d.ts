@@ -1,7 +1,7 @@
-import { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
-import { Request } from 'express';
+import { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
+import { Request } from "express";
 
-import express from 'express';
+import express from "express";
 
 export interface TokenPayload {
   userId?: string;
@@ -16,4 +16,3 @@ declare global {
     }
   }
 }
-

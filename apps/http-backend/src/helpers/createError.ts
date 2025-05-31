@@ -1,4 +1,4 @@
-import AppError from './AppError';
+import AppError from "./AppError";
 
 const createError = ({
   message,
@@ -11,4 +11,3 @@ const createError = ({
 };
 
 export default createError;
-

@@ -25,6 +25,8 @@ export default function SignIn() {
           throw new Error(res.message);
         }
 
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
         router.push("/");
       },
     );

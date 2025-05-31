@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
-import { asyncErrorHandler, sendSuccessResponse } from '../helpers';
-import { prismaClient, ChatTypeEnum } from '@repo/db/prismaClient';
+import { Request, Response } from "express";
+import { asyncErrorHandler, sendSuccessResponse } from "../helpers";
+import { prismaClient, ChatTypeEnum } from "@repo/db/prismaClient";
 
 // GET /chats/room/roomId
 export const getChatsByRoomId = asyncErrorHandler(
   async (req: Request, res: Response) => {
     const chatType =
-      (req.query.chatType as string).toUpperCase() === 'MESSAGE'
+      (req.query.chatType as string).toUpperCase() === "MESSAGE"
         ? ChatTypeEnum.MESSAGE
         : ChatTypeEnum.DRAW;
 
@@ -32,15 +32,14 @@ export const getChatsByRoomId = asyncErrorHandler(
         },
       },
       orderBy: {
-        createdAt: 'asc',
+        createdAt: "asc",
       },
     });
 
     sendSuccessResponse({
       res,
       data: chats,
-      message: 'All chats',
+      message: "All chats",
     });
-  }
+  },
 );
-

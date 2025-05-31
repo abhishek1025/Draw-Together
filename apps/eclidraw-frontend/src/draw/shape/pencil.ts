@@ -1,5 +1,5 @@
-import { ShapeType } from '@/interfaces';
-import {selectShape, setLineType} from '@/draw/shape/common';
+import { ShapeType } from "@/interfaces";
+import { selectShape, setLineType } from "@/draw/shape/common";
 
 export const drawPencilStrokes = (params: {
   ctx: CanvasRenderingContext2D;
@@ -8,11 +8,11 @@ export const drawPencilStrokes = (params: {
 }) => {
   const { ctx, shape, isActive } = params;
 
-  if (shape.type !== 'pencil') return;
+  if (shape.type !== "pencil") return;
 
   ctx.strokeStyle = shape.stroke; // Border color
 
-  ctx.lineCap = 'round';
+  ctx.lineCap = "round";
 
   setLineType({
     ctx,
@@ -33,17 +33,17 @@ export const drawPencilStrokes = (params: {
   ctx.beginPath();
   ctx.moveTo(shape.x, shape.y);
 
-  if(shape.selected) {
+  if (shape.selected) {
     selectShape({
       ctx,
-      ...getBoundingBoxFromStrokes(shape.pencilStrokes)
-    })
+      ...getBoundingBoxFromStrokes(shape.pencilStrokes),
+    });
   }
 };
 
 export function getBoundingBoxFromStrokes(strokes: number[][]) {
-  const xs = strokes.map(p => p[0]);
-  const ys = strokes.map(p => p[1]);
+  const xs = strokes.map((p) => p[0]);
+  const ys = strokes.map((p) => p[1]);
 
   const minX = Math.min(...xs);
   const minY = Math.min(...ys);
@@ -58,12 +58,11 @@ export function getBoundingBoxFromStrokes(strokes: number[][]) {
   };
 }
 
-
 export function isNearLine(
   lineStrokes: number[][],
   px: number,
   py: number,
-  threshold: number = 5
+  threshold: number = 5,
 ): boolean {
   for (let i = 0; i < lineStrokes.length - 1; i++) {
     const [x1, y1] = lineStrokes[i];
@@ -83,7 +82,7 @@ export function isNearLine(
       x1: number,
       y1: number,
       x2: number,
-      y2: number
+      y2: number,
     ): number {
       const lengthSquared = (x2 - x1) ** 2 + (y2 - y1) ** 2;
 
@@ -101,4 +100,3 @@ export function isNearLine(
 
   return false;
 }
-

@@ -1,11 +1,9 @@
-import { StrokeStyleType, ToolType } from '@/interfaces';
-import { CanvasManager } from './CanvasManager';
-import { MouseHandler } from './MouseHandler';
-import { ShapeManager } from './ShapeManager';
-import { SocketHandler } from './SocketHandler';
-import { ToolManager } from './ToolManager';
-
-
+import { StrokeStyleType, ToolType } from "@/interfaces";
+import { CanvasManager } from "./CanvasManager";
+import { MouseHandler } from "./MouseHandler";
+import { ShapeManager } from "./ShapeManager";
+import { SocketHandler } from "./SocketHandler";
+import { ToolManager } from "./ToolManager";
 
 export class Game {
   private readonly canvasManager: CanvasManager;
@@ -14,22 +12,21 @@ export class Game {
   private mouseHandler: MouseHandler;
   private readonly socketHandler: SocketHandler;
 
-
   constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
-    this.canvasManager = new CanvasManager(canvas);
     this.shapeManager = new ShapeManager(roomId);
+    this.canvasManager = new CanvasManager(canvas, this.shapeManager);
     this.toolManager = new ToolManager();
     this.socketHandler = new SocketHandler(
       socket,
       roomId,
       this.canvasManager,
-      this.shapeManager
+      this.shapeManager,
     );
     this.mouseHandler = new MouseHandler(
       this.canvasManager,
       this.shapeManager,
       this.toolManager,
-      this.socketHandler
+      this.socketHandler,
     );
     this.init();
   }
@@ -40,7 +37,7 @@ export class Game {
   }
 
   setTool(tool: ToolType) {
-    this.toolManager.setTool(tool)
+    this.toolManager.setTool(tool);
   }
 
   setStyle(options: {
@@ -58,17 +55,15 @@ export class Game {
 
     let selectedShape = this.shapeManager.getSelectedShape();
 
-    if(selectedShape){
+    if (selectedShape) {
+      selectedShape = { ...selectedShape, ...options };
 
-      selectedShape = {...selectedShape, ...options}
-
-      this.shapeManager.setSelectedShape(selectedShape)
+      this.shapeManager.setSelectedShape(selectedShape);
       this.shapeManager.updateShape(selectedShape);
       this.canvasManager.clearCanvas(this.shapeManager.getShapes());
-      this.socketHandler.sendUpdateShape(selectedShape)
+      this.socketHandler.sendUpdateShape(selectedShape);
     }
   }
-
 
   resetSelectedShape() {
     this.shapeManager.resetSelectedShape();
@@ -79,6 +74,7 @@ export class Game {
     this.mouseHandler.destroy();
   }
 
-
-
+  getTotalPan(){
+    return this.shapeManager.getTotalPan();
+  }
 }

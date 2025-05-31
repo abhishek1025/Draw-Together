@@ -1,10 +1,10 @@
-import { Response } from 'express';
+import { Response } from "express";
 import {
-	ReasonPhrases,
-	StatusCodes,
-	getReasonPhrase,
-	getStatusCode,
-} from 'http-status-codes';
+  ReasonPhrases,
+  StatusCodes,
+  getReasonPhrase,
+  getStatusCode,
+} from "http-status-codes";
 
 type SuccessResponseParams = {
   res: Response;
@@ -20,12 +20,10 @@ export const sendSuccessResponse = ({
   message,
 }: SuccessResponseParams) => {
   res.status(statusCode).json({
-    status: 'ok',
+    status: "ok",
     ...(data && { data }),
     ...(message && { message }),
   });
 };
 
 export default sendSuccessResponse;
-
-

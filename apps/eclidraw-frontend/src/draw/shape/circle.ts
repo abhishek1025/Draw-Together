@@ -1,5 +1,5 @@
-import { ShapeType } from '@/interfaces';
-import { selectShape, setLineType } from '@/draw/shape/common';
+import { ShapeType } from "@/interfaces";
+import { selectShape, setLineType } from "@/draw/shape/common";
 
 export function drawCircle(params: {
   ctx: CanvasRenderingContext2D;
@@ -7,7 +7,7 @@ export function drawCircle(params: {
 }) {
   const { ctx, shape } = params;
 
-  if (shape.type !== 'circle') return;
+  if (shape.type !== "circle") return;
 
   ctx.fillStyle = shape.bgColor; // Transparent fill
   ctx.strokeStyle = shape.stroke; // Border color
@@ -26,7 +26,7 @@ export function drawCircle(params: {
     shape.radiusY,
     0,
     0,
-    Math.PI * 2
+    Math.PI * 2,
   );
   ctx.stroke();
   ctx.fill();
@@ -49,7 +49,7 @@ export function isNearCircle(
   radiusX: number,
   radiusY: number,
   px: number,
-  py: number
+  py: number,
 ) {
   xStart = xStart + radiusX;
   yStart = yStart + radiusY;
@@ -58,4 +58,3 @@ export function isNearCircle(
     (px - xStart) ** 2 / radiusX ** 2 + (py - yStart) ** 2 / radiusY ** 2 <= 1
   );
 }
-

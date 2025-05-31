@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { StrokeStyleType } from '@/interfaces';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { StrokeStyleType } from "@/interfaces";
 
 interface CanvasStateType {
   stroke: string;
@@ -9,14 +9,14 @@ interface CanvasStateType {
 }
 
 const initialState: CanvasStateType = {
-  stroke: '#ffffff',
-  bgColor: 'transparent',
+  stroke: "#ffffff",
+  bgColor: "transparent",
   strokeWidth: 1,
-  strokeStyle: 'solid',
+  strokeStyle: "solid",
 };
 
 export const canvasSlice = createSlice({
-  name: 'canvas',
+  name: "canvas",
   initialState,
   reducers: {
     setStroke(state, action: PayloadAction<string>) {
@@ -42,4 +42,3 @@ export const { setStroke, setBgColor, setStrokeWidth, setStrokeStyle } =
   canvasSlice.actions;
 
 export default canvasSlice.reducer;
-

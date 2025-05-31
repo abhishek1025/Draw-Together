@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Game } from '@/draw/Game';
-import { ToolType } from '@/interfaces';
-import TopBarCanvas from '@/components/draw/TopBarCanvas';
-import { Chat, ActiveUsersList} from '@/components/chat';
-import CanvasSidebar from '@/components/draw/CanvasSidebar';
-import { useAppSelector } from '@/store/hooks';
-import {MessageType} from "@repo/common/messageTypeConstant";
+import React, { useEffect, useRef, useState } from "react";
+import { Game } from "@/draw/Game";
+import { ToolType } from "@/interfaces";
+import TopBarCanvas from "@/components/draw/TopBarCanvas";
+import { Chat, ActiveUsersList } from "@/components/chat";
+import CanvasSidebar from "@/components/draw/CanvasSidebar";
+import { useAppSelector } from "@/store/hooks";
+import { MessageType } from "@repo/common/messageTypeConstant";
 
 export default function Canvas({
   roomId,
@@ -19,28 +19,28 @@ export default function Canvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputBoxRef = useRef<HTMLTextAreaElement>(null);
 
-  const [selectedTool, setSelectedTool] = useState<ToolType>('select');
+  const [selectedTool, setSelectedTool] = useState<ToolType>("select");
   const [game, setGame] = useState<Game>();
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const { stroke, bgColor, strokeWidth, strokeStyle } = useAppSelector(
-    state => state.canvas
+    (state) => state.canvas,
   );
 
   const handleClickEventForTextBox = (e: MouseEvent) => {
-    if (selectedTool !== 'text') {
+    if (selectedTool !== "text") {
       if (inputBoxRef.current) {
-        inputBoxRef.current.style.display = 'none';
+        inputBoxRef.current.style.display = "none";
       }
       return;
     }
 
     if (inputBoxRef.current) {
-      inputBoxRef.current.style.display = 'block';
-      inputBoxRef.current.style.top = e.clientY.toString() + 'px';
-      inputBoxRef.current.style.left = e.clientX.toString() + 'px';
+      inputBoxRef.current.style.display = "block";
+      inputBoxRef.current.style.top = e.clientY.toString() + "px";
+      inputBoxRef.current.style.left = e.clientX.toString() + "px";
       inputBoxRef.current.focus();
 
-      setSelectedTool('select');
+      setSelectedTool("select");
     }
   };
 
@@ -54,26 +54,28 @@ export default function Canvas({
         type: MessageType.CHAT_DRAW,
         roomId: roomId,
         message: JSON.stringify({
-          type: 'text',
-          x: left,
-          y: top + 6,
+          type: "text",
+          x: left + (game?.getTotalPan()?.totalPanX || 0),
+          y: top + 6 + (game?.getTotalPan()?.totalPanY || 0),
           height: height - 10,
           width: width,
           text,
           stroke,
         }),
-      })
+      }),
     );
 
-    setText('');
+    setText("");
   };
 
   const clearCanvas = () => {
-    socket.send(JSON.stringify({
-      type: MessageType.DELETE_DRAWS,
-      roomId: roomId,
-    }))
-  }
+    socket.send(
+      JSON.stringify({
+        type: MessageType.DELETE_DRAWS,
+        roomId: roomId,
+      }),
+    );
+  };
 
   useEffect(() => {
     if (canvasRef.current && inputBoxRef.current) {
@@ -96,34 +98,34 @@ export default function Canvas({
     game?.resetSelectedShape();
 
     switch (selectedTool) {
-      case 'eraser':
+      case "eraser":
         canvas.style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='10'%20height='10'%20viewBox='0%200%2040%2040'%3E%3Ccircle%20cx='20'%20cy='20'%20r='18'%20fill='none'%20stroke='white'%20stroke-width='4'/%3E%3C/svg%3E") 20 20, auto`;
         break;
-      case 'select':
-        canvas.style.cursor = 'auto';
+      case "select":
+        canvas.style.cursor = "auto";
         break;
 
-      case 'text':
-        canvas.style.cursor = 'text';
+      case "text":
+        canvas.style.cursor = "text";
         break;
 
       default:
-        canvas.style.cursor = 'crosshair'; // Default cursor for other tools
+        canvas.style.cursor = "crosshair"; // Default cursor for other tools
     }
   }, [selectedTool, game]);
 
   useEffect(() => {
-    canvasRef?.current?.addEventListener('click', handleClickEventForTextBox);
-    canvasRef?.current?.addEventListener('focusout', textInputFocusOutHandler);
+    canvasRef?.current?.addEventListener("click", handleClickEventForTextBox);
+    canvasRef?.current?.addEventListener("focusout", textInputFocusOutHandler);
 
     return () => {
       canvasRef?.current?.removeEventListener(
-        'click',
-        handleClickEventForTextBox
+        "click",
+        handleClickEventForTextBox,
       );
       canvasRef?.current?.removeEventListener(
-        'focusout',
-        textInputFocusOutHandler
+        "focusout",
+        textInputFocusOutHandler,
       );
     };
   }, [canvasRef, selectedTool]);
@@ -131,39 +133,41 @@ export default function Canvas({
   useEffect(() => {
     if (inputBoxRef.current) {
       inputBoxRef.current.style.height =
-        Math.max(50, inputBoxRef.current.scrollHeight).toString() + 'px';
+        Math.max(50, inputBoxRef.current.scrollHeight).toString() + "px";
       inputBoxRef.current.style.width =
-        Math.max(50, inputBoxRef.current.scrollWidth).toString() + 'px';
+        Math.max(50, inputBoxRef.current.scrollWidth).toString() + "px";
     }
 
     inputBoxRef?.current?.addEventListener(
-      'focusout',
-      textInputFocusOutHandler
+      "focusout",
+      textInputFocusOutHandler,
     );
 
     return () => {
       inputBoxRef?.current?.removeEventListener(
-        'focusout',
-        textInputFocusOutHandler
+        "focusout",
+        textInputFocusOutHandler,
       );
     };
   }, [text]);
 
   useEffect(() => {
-   game?.setStyle({
-     stroke,
-     bgColor,
-     strokeStyle,
-     strokeWidth
-   })
+    game?.setStyle({
+      stroke,
+      bgColor,
+      strokeStyle,
+      strokeWidth,
+    });
   }, [stroke, bgColor, strokeWidth, strokeStyle, game]);
+
 
   return (
     <div
       style={{
-        height: '100vh',
-        overflow: 'hidden',
-      }}>
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
       <canvas
         ref={canvasRef}
         width={window.innerWidth}
@@ -183,10 +187,10 @@ export default function Canvas({
         }}
         ref={inputBoxRef}
         value={text}
-        onChange={e => {
+        onChange={(e) => {
           setText(e.target.value);
         }}
-        wrap='off'
+        wrap="off"
       />
 
       <ActiveUsersList ws={socket} roomId={roomId} />
@@ -197,4 +201,3 @@ export default function Canvas({
     </div>
   );
 }
-

@@ -1,16 +1,16 @@
 export type ChatMessage = {
+  id: string;
+  message: string;
+  user: {
     id: string;
-    message: string;
-    user: {
-        id: string;
-        name: string;
-        email: string;
-        photo: string;
-    };
+    name: string;
+    email: string;
+    photo: string;
+  };
 };
 
 export type ActiveUser = {
-    id: string;
-    name: string;
-    photo: string;
-}
+  id: string;
+  name: string;
+  photo: string;
+};

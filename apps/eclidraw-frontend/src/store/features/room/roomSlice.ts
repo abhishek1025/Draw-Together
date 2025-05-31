@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { addNewRoom } from '@/store/features/room/roomActions';
-import { RoomReduxStateType } from '@/interfaces';
+import { createSlice } from "@reduxjs/toolkit";
+import { addNewRoom } from "@/store/features/room/roomActions";
+import { RoomReduxStateType } from "@/interfaces";
 
 const initialState: RoomReduxStateType = {
   roomFormError: undefined,
@@ -8,12 +8,12 @@ const initialState: RoomReduxStateType = {
 };
 
 export const roomSlice = createSlice({
-  name: 'rooms',
+  name: "rooms",
   initialState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(addNewRoom.fulfilled, state => {
+      .addCase(addNewRoom.fulfilled, (state) => {
         state.roomFormError = undefined;
         state.roomFormLoading = false;
       })
@@ -21,7 +21,7 @@ export const roomSlice = createSlice({
         state.roomFormError = action.payload?.message;
         state.roomFormLoading = false;
       })
-      .addCase(addNewRoom.pending, state => {
+      .addCase(addNewRoom.pending, (state) => {
         state.roomFormError = undefined;
         state.roomFormLoading = true;
       });
@@ -32,4 +32,3 @@ export const roomSlice = createSlice({
 export const {} = roomSlice.actions;
 
 export default roomSlice.reducer;
-

@@ -1,16 +1,16 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { KnownError, RoomFormFormikType } from '@/interfaces';
-import { clientPostRequest } from '@/utils';
-import { AxiosError } from 'axios';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { KnownError, RoomFormFormikType } from "@/interfaces";
+import { clientPostRequest } from "@/utils";
+import { AxiosError } from "axios";
 
 export const addNewRoom = createAsyncThunk<
   void,
   RoomFormFormikType,
   { rejectValue: KnownError }
->('room/add-new-room', async (roomData, { rejectWithValue }) => {
+>("room/add-new-room", async (roomData, { rejectWithValue }) => {
   try {
     return await clientPostRequest({
-      endpoint: '/rooms',
+      endpoint: "/rooms",
       data: roomData,
     });
   } catch (err) {
@@ -27,4 +27,3 @@ export const addNewRoom = createAsyncThunk<
     return rejectWithValue(error.response.data);
   }
 });
-

@@ -1,2 +1,1 @@
-export * from './passwordHashing';
-
+export * from "./passwordHashing";

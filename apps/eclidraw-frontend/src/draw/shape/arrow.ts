@@ -1,6 +1,6 @@
-import { ShapeType } from '@/interfaces';
-import {selectShape, setLineType} from '@/draw/shape/common';
-import {calculateBounds} from "@/draw/utils/canvasUtils";
+import { ShapeType } from "@/interfaces";
+import { selectShape, setLineType } from "@/draw/shape/common";
+import { calculateBounds } from "@/draw/utils/canvasUtils";
 
 export const drawArrow = (params: {
   ctx: CanvasRenderingContext2D;
@@ -8,7 +8,7 @@ export const drawArrow = (params: {
 }) => {
   const { ctx, shape } = params;
 
-  if (shape.type !== 'arrow') return;
+  if (shape.type !== "arrow") return;
 
   ctx.strokeStyle = shape.stroke; // Border color
 
@@ -29,28 +29,30 @@ export const drawArrow = (params: {
   ctx.lineTo(shape.endX, shape.endY);
   ctx.lineTo(
     shape.endX - headLength * Math.cos(angle - Math.PI / 6),
-    shape.endY - headLength * Math.sin(angle - Math.PI / 6)
+    shape.endY - headLength * Math.sin(angle - Math.PI / 6),
   );
   ctx.moveTo(shape.endX, shape.endY);
   ctx.lineTo(
     shape.endX - headLength * Math.cos(angle + Math.PI / 6),
-    shape.endY - headLength * Math.sin(angle + Math.PI / 6)
+    shape.endY - headLength * Math.sin(angle + Math.PI / 6),
   );
   ctx.closePath();
   ctx.stroke();
 
-  const { height, width, x, y } = calculateBounds(shape.x, shape.y, shape.endX, shape.endY);
+  const { height, width, x, y } = calculateBounds(
+    shape.x,
+    shape.y,
+    shape.endX,
+    shape.endY,
+  );
 
   if (shape.selected) {
-
-   selectShape({
-     ctx,
-     height,
-     width,
-     x: x-2,
-     y:y-2
-   })
-
+    selectShape({
+      ctx,
+      height,
+      width,
+      x: x - 2,
+      y: y - 2,
+    });
   }
 };
-

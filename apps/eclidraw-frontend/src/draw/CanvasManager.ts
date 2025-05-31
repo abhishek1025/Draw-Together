@@ -1,27 +1,31 @@
-import { ShapeType } from '@/interfaces';
+import { ShapeType } from "@/interfaces";
 import {
-  arrowShape, canvasText,
+  arrowShape,
+  canvasText,
   circleShape,
   diamondShape,
   lineShape,
   pencilShape,
   rectShape,
-} from './shape';
+} from "./shape";
+import {ShapeManager} from "@/draw/ShapeManager";
 
 export class CanvasManager {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
+  private readonly shapeManager: ShapeManager;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, shapeManager: ShapeManager) {
     this.canvas = canvas;
-    this.ctx = canvas.getContext('2d')!;
+    this.ctx = canvas.getContext("2d")!;
+    this.shapeManager = shapeManager;
   }
 
   clearCanvas(shapes: ShapeType[]) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = 'rgb(0, 0, 0)';
+    this.ctx.fillStyle = "rgb(0, 0, 0)";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    shapes.forEach(shape => {
+    shapes.forEach((shape) => {
       this.drawShape(shape);
     });
   }
@@ -33,25 +37,25 @@ export class CanvasManager {
     };
 
     switch (shape.type) {
-      case 'circle':
+      case "circle":
         circleShape.drawCircle(commonProps);
         break;
-      case 'rect':
+      case "rect":
         rectShape.drawRect(commonProps);
         break;
-      case 'line':
+      case "line":
         lineShape.drawLine(commonProps);
         break;
-      case 'arrow':
+      case "arrow":
         arrowShape.drawArrow(commonProps);
         break;
-      case 'pencil':
+      case "pencil":
         pencilShape.drawPencilStrokes({ ...commonProps, isActive: false });
         break;
-      case 'diamond':
+      case "diamond":
         diamondShape.drawDiamondShape(commonProps);
         break;
-      case 'text':
+      case "text":
         canvasText.writeTextInCanvas(commonProps);
         break;
     }
@@ -64,5 +68,4 @@ export class CanvasManager {
   getContext() {
     return this.ctx;
   }
-
 }

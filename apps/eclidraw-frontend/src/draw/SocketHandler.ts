@@ -1,10 +1,8 @@
-import { ShapeType } from '@/interfaces';
-import { CanvasManager } from './CanvasManager';
-import { ShapeManager } from './ShapeManager';
-import {MessageType} from "@repo/common/messageTypeConstant";
-import {ActiveUser} from "@/interfaces/chat";
-
-
+import { ShapeType } from "@/interfaces";
+import { CanvasManager } from "./CanvasManager";
+import { ShapeManager } from "./ShapeManager";
+import { MessageType } from "@repo/common/messageTypeConstant";
+import {MouseHandler} from "@/draw/MouseHandler";
 
 export class SocketHandler {
   private socket: WebSocket;
@@ -16,7 +14,7 @@ export class SocketHandler {
     socket: WebSocket,
     roomId: string,
     canvasManager: CanvasManager,
-    shapeManager: ShapeManager
+    shapeManager: ShapeManager,
   ) {
     this.socket = socket;
     this.roomId = roomId;
@@ -26,12 +24,12 @@ export class SocketHandler {
   }
 
   private init() {
-    this.socket.addEventListener('message', event => {
+    this.socket.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
 
       switch (data.type) {
         case MessageType.CHAT_DRAW:
-          const shape: ShapeType = JSON.parse(data.message);
+          const shape: ShapeType = {...JSON.parse(data.message), user: JSON.parse(data.user)};
           this.shapeManager.addShape(shape);
           this.canvasManager.clearCanvas(this.shapeManager.getShapes());
           break;
@@ -45,7 +43,8 @@ export class SocketHandler {
           const updatedShape: ShapeType = JSON.parse(data.message);
           this.shapeManager.updateShape({
             ...updatedShape,
-            selected: updatedShape.id === this.shapeManager.getSelectedShape()?.id
+            selected:
+              updatedShape.id === this.shapeManager.getSelectedShape()?.id,
           });
           this.canvasManager.clearCanvas(this.shapeManager.getShapes());
           break;
@@ -56,7 +55,7 @@ export class SocketHandler {
           break;
 
         default:
-          break
+          break;
       }
     });
   }
@@ -67,7 +66,7 @@ export class SocketHandler {
         type: MessageType.CHAT_DRAW,
         roomId: this.roomId,
         message: JSON.stringify(shape),
-      })
+      }),
     );
   }
 
@@ -78,18 +77,18 @@ export class SocketHandler {
         type: MessageType.ERASE_DRAW,
         roomId: this.roomId,
         chatId,
-      })
+      }),
     );
   }
 
   sendUpdateShape(shape: ShapeType) {
     if (!shape) return;
-    this.socket.send(JSON.stringify({
-      type: MessageType.UPDATE_SHAPE,
-      roomId: this.roomId,
-      message: JSON.stringify(shape),
-    }));
+    this.socket.send(
+      JSON.stringify({
+        type: MessageType.UPDATE_SHAPE,
+        roomId: this.roomId,
+        message: JSON.stringify(shape),
+      }),
+    );
   }
-
-
 }

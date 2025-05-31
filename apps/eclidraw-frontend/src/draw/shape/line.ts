@@ -1,6 +1,6 @@
-import { ShapeType } from '@/interfaces';
-import {selectShape, setLineType} from '@/draw/shape/common';
-import {calculateBounds} from "@/draw/utils/canvasUtils";
+import { ShapeType } from "@/interfaces";
+import { selectShape, setLineType } from "@/draw/shape/common";
+import { calculateBounds } from "@/draw/utils/canvasUtils";
 
 export function drawLine(params: {
   ctx: CanvasRenderingContext2D;
@@ -8,7 +8,7 @@ export function drawLine(params: {
 }) {
   const { ctx, shape } = params;
 
-  if (shape.type !== 'line') return;
+  if (shape.type !== "line") return;
 
   ctx.strokeStyle = shape.stroke; // Border color
   setLineType({
@@ -23,18 +23,20 @@ export function drawLine(params: {
   ctx.lineTo(shape.endX, shape.endY);
   ctx.stroke();
 
-  const { height, width, x, y } = calculateBounds(shape.x, shape.y, shape.endX, shape.endY);
+  const { height, width, x, y } = calculateBounds(
+    shape.x,
+    shape.y,
+    shape.endX,
+    shape.endY,
+  );
 
   if (shape.selected) {
-
     selectShape({
       ctx,
       height,
       width,
-      x: x-2,
-      y:y-2
-    })
-
+      x: x - 2,
+      y: y - 2,
+    });
   }
 }
-
