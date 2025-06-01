@@ -45,7 +45,7 @@ export class SocketHandler {
             ...updatedShape,
             selected:
               updatedShape.id === this.shapeManager.getSelectedShape()?.id,
-          });
+          }, true);
           this.canvasManager.clearCanvas(this.shapeManager.getShapes());
           break;
 

@@ -30,7 +30,7 @@ export class CanvasManager {
     });
   }
 
-  drawShape(shape: ShapeType) {
+  drawShape(shape: ShapeType, isPencilActive: boolean = false) {
     const commonProps = {
       ctx: this.ctx,
       shape,
@@ -50,7 +50,7 @@ export class CanvasManager {
         arrowShape.drawArrow(commonProps);
         break;
       case "pencil":
-        pencilShape.drawPencilStrokes({ ...commonProps, isActive: false });
+        pencilShape.drawPencilStrokes({ ...commonProps, isActive: isPencilActive });
         break;
       case "diamond":
         diamondShape.drawDiamondShape(commonProps);

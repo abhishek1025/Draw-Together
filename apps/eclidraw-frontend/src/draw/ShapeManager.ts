@@ -72,16 +72,50 @@ export class ShapeManager {
 
     }
 
-
-
     this.shapes.push(shape);
   }
 
-  updateShape(updatedShape: ShapeType) {
+  updateShape(updatedShape: ShapeType, isFromSocket: boolean = false) {
+
+    if(isFromSocket) {
+      const panX = this.totalPanX;
+      const panY = this.totalPanY;
+
+      const x = updatedShape.x - panX
+      const  y = updatedShape.y - panY
+
+      switch (updatedShape.type) {
+        case "arrow":
+        case "line":
+          updatedShape = {
+            ...updatedShape,
+           x,y,
+            endX: updatedShape.endX - panX,
+            endY: updatedShape.endY - panY,
+          };
+          break;
+
+        case "pencil":
+          updatedShape = {
+            ...updatedShape,
+           x,y,
+            pencilStrokes: updatedShape.pencilStrokes.map(([x, y]) => [x - panX, y - panY]),
+          };
+          break;
+
+        default:
+          updatedShape = {
+            ...updatedShape,
+          x,y,
+          };
+      }
+    }
+
     this.shapes = this.shapes.map((shape) =>
-      shape.id === updatedShape.id ? { ...shape, ...updatedShape } : shape,
+        shape.id === updatedShape.id ? { ...shape, ...updatedShape } : shape
     );
   }
+
 
   deleteShape(chatId: string) {
     this.shapes = this.shapes.filter((shape) => shape.id !== chatId);
